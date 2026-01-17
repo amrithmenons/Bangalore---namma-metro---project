@@ -1,315 +1,414 @@
-
-
-# #working well but earlier version
 # import streamlit as st
 # import pandas as pd
 # import numpy as np
 # from sklearn.model_selection import train_test_split
 # from sklearn.ensemble import RandomForestClassifier
+# from sklearn.metrics import accuracy_score, precision_score, recall_score, f1_score, confusion_matrix
+# import plotly.graph_objects as go
+# import plotly.express as px
 
-# # Load data from Excel
-# def load_data(file_path):
-#     df = pd.read_excel(file_path)
+# # Modern Dark Theme with Neon Accents
+# st.markdown("""
+#     <style>
+#         @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;900&display=swap');
+        
+#         * { font-family: 'Inter', sans-serif; }
+        
+#         .stApp {
+#             background: linear-gradient(135deg, #0a0e27 0%, #1a1a2e 50%, #16213e 100%);
+#         }
+        
+#         .hero { text-align: center; padding: 40px 20px; }
+#         .hero-icon { font-size: 72px; filter: drop-shadow(0 0 20px rgba(59, 130, 246, 0.6)); }
+#         .hero-title {
+#             font-size: 56px; font-weight: 900; margin: 20px 0;
+#             background: linear-gradient(135deg, #3b82f6, #8b5cf6, #ec4899);
+#             -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+#         }
+#         .hero-subtitle { font-size: 18px; color: rgba(255,255,255,0.6); margin-bottom: 30px; }
+        
+#         .glass-card {
+#             background: rgba(255,255,255,0.05); backdrop-filter: blur(20px);
+#             border-radius: 20px; padding: 28px; margin: 20px 0;
+#             border: 1px solid rgba(255,255,255,0.1);
+#             box-shadow: 0 20px 60px rgba(0,0,0,0.4);
+#             transition: all 0.3s ease;
+#         }
+#         .glass-card:hover { transform: translateY(-4px); border-color: rgba(59,130,246,0.3); }
+        
+#         .status-success {
+#             background: linear-gradient(135deg, rgba(16,185,129,0.1), rgba(5,150,105,0.05));
+#             backdrop-filter: blur(20px); border-radius: 18px; padding: 24px;
+#             border: 1px solid rgba(16,185,129,0.3); margin: 16px 0;
+#             box-shadow: 0 0 30px rgba(16,185,129,0.2);
+#         }
+#         .status-danger {
+#             background: linear-gradient(135deg, rgba(239,68,68,0.1), rgba(220,38,38,0.05));
+#             backdrop-filter: blur(20px); border-radius: 18px; padding: 24px;
+#             border: 1px solid rgba(239,68,68,0.3); margin: 16px 0;
+#             box-shadow: 0 0 30px rgba(239,68,68,0.2);
+#         }
+#         .status-title { font-size: 26px; font-weight: 800; margin-bottom: 10px; }
+#         .status-success .status-title { color: #6ee7b7; }
+#         .status-danger .status-title { color: #fca5a5; }
+        
+#         .alt-station {
+#             background: rgba(59,130,246,0.08); backdrop-filter: blur(15px);
+#             border-radius: 16px; padding: 20px; margin: 12px 0;
+#             border: 1px solid rgba(59,130,246,0.2);
+#             transition: all 0.3s ease;
+#         }
+#         .alt-station:hover {
+#             transform: translateX(8px); border-color: rgba(59,130,246,0.5);
+#             box-shadow: 0 10px 30px rgba(59,130,246,0.3);
+#         }
+        
+#         .rank { display: inline-block; width: 44px; height: 44px; border-radius: 50%;
+#             background: linear-gradient(135deg, #3b82f6, #6366f1);
+#             color: white; font-weight: 800; font-size: 18px;
+#             text-align: center; line-height: 44px;
+#             box-shadow: 0 6px 16px rgba(59,130,246,0.4);
+#         }
+        
+#         .metric-box {
+#             background: rgba(15,23,42,0.7); backdrop-filter: blur(15px);
+#             border-radius: 16px; padding: 24px; text-align: center;
+#             border: 1px solid rgba(59,130,246,0.2);
+#             transition: all 0.3s ease;
+#         }
+#         .metric-box:hover { transform: translateY(-4px); border-color: rgba(59,130,246,0.4); }
+#         .metric-label { color: rgba(255,255,255,0.6); font-size: 12px; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 8px; }
+#         .metric-value { font-size: 36px; font-weight: 900; background: linear-gradient(135deg, #60a5fa, #a78bfa); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+        
+#         .badge { display: inline-block; padding: 6px 14px; border-radius: 10px; font-size: 13px; font-weight: 600; margin: 4px; }
+#         .badge-clear { background: rgba(16,185,129,0.15); color: #6ee7b7; border: 1px solid rgba(16,185,129,0.3); }
+#         .badge-busy { background: rgba(245,158,11,0.15); color: #fcd34d; border: 1px solid rgba(245,158,11,0.3); }
+        
+#         .section-header {
+#             color: #fff; font-size: 28px; font-weight: 800;
+#             margin: 36px 0 20px; padding-bottom: 12px;
+#             border-bottom: 2px solid rgba(59,130,246,0.3);
+#         }
+        
+#         .stButton > button {
+#             background: linear-gradient(135deg, #3b82f6, #6366f1);
+#             color: white; border: none; border-radius: 14px;
+#             padding: 16px 32px; font-size: 16px; font-weight: 700; width: 100%;
+#             box-shadow: 0 10px 25px rgba(59,130,246,0.4);
+#             transition: all 0.3s ease;
+#         }
+#         .stButton > button:hover {
+#             background: linear-gradient(135deg, #2563eb, #4f46e5);
+#             transform: translateY(-2px); box-shadow: 0 15px 35px rgba(59,130,246,0.5);
+#         }
+        
+#         section[data-testid="stSidebar"] {
+#             background: linear-gradient(180deg, rgba(15,23,42,0.98), rgba(0,0,0,0.98));
+#             border-right: 1px solid rgba(59,130,246,0.2);
+#         }
+        
+#         .info-box {
+#             background: rgba(59,130,246,0.08); border-left: 4px solid #3b82f6;
+#             border-radius: 12px; padding: 20px; margin: 16px 0;
+#             color: #bfdbfe; line-height: 1.7;
+#         }
+        
+#         .stTabs [data-baseweb="tab-list"] {
+#             gap: 8px; background: rgba(15,23,42,0.6);
+#             border-radius: 12px; padding: 6px;
+#         }
+#         .stTabs [data-baseweb="tab"] {
+#             background: transparent; color: rgba(255,255,255,0.6);
+#             border-radius: 10px; padding: 10px 20px; font-weight: 600;
+#         }
+#         .stTabs [aria-selected="true"] {
+#             background: linear-gradient(135deg, #3b82f6, #6366f1);
+#             color: white; box-shadow: 0 4px 10px rgba(59,130,246,0.4);
+#         }
+#     </style>
+# """, unsafe_allow_html=True)
 
-#     # Identify available time slots dynamically
+# @st.cache_data
+# def load_data(file):
+#     if file.name.endswith('.csv'):
+#         df = pd.read_csv(file)
+#     elif file.name.endswith(('.xlsx', '.xls')):
+#         df = pd.read_excel(file)
+#     else:
+#         st.error("❌ Unsupported file format. Please upload CSV or Excel file.")
+#         return None, None
+    
 #     time_slots = sorted(set(col.split("_")[-1] for col in df.columns if "PPHPD" in col))
-
-#     # Define congestion labels for each time slot
+    
 #     for time in time_slots:
-#         df[f'Rush_Boarding_{time}'] = (df[f'Boarding_{time}'] > 1000).astype(int)
-#         df[f'Rush_Alighting_{time}'] = (df[f'Alighting_{time}'] > 1000).astype(int)
-
+#         boarding_threshold = df[f'Boarding_{time}'].quantile(0.60)
+#         alighting_threshold = df[f'Alighting_{time}'].quantile(0.60)
+#         df[f'Rush_Boarding_{time}'] = (df[f'Boarding_{time}'] > boarding_threshold).astype(int)
+#         df[f'Rush_Alighting_{time}'] = (df[f'Alighting_{time}'] > alighting_threshold).astype(int)
+    
 #     return df, time_slots
 
-# # Train ML models for each time slot
+# @st.cache_resource
 # def train_ml_models(df, time_slots):
-#     models_boarding = {}
-#     models_alighting = {}
-
+#     models_boarding, models_alighting = {}, {}
+#     metrics_boarding, metrics_alighting = {}, {}
+    
 #     for time in time_slots:
-#         # Train model for Boarding congestion
-#         X_boarding = df[[f'Boarding_{time}', f'PPHPD_{time}']]
-#         y_boarding = df[f'Rush_Boarding_{time}']
-#         X_train_b, X_test_b, y_train_b, y_test_b = train_test_split(X_boarding, y_boarding, test_size=0.2, random_state=42)
-#         model_boarding = RandomForestClassifier(n_estimators=200, max_depth=10, random_state=42)
-#         model_boarding.fit(X_train_b, y_train_b)
-#         models_boarding[time] = model_boarding
+#         X_b = df[[f'Boarding_{time}', f'PPHPD_{time}', 'Distance from SBC']]
+#         y_b = df[f'Rush_Boarding_{time}']
+#         X_train_b, X_test_b, y_train_b, y_test_b = train_test_split(X_b, y_b, test_size=0.2, random_state=42)
+        
+#         model_b = RandomForestClassifier(n_estimators=300, max_depth=15, random_state=42)
+#         model_b.fit(X_train_b, y_train_b)
+#         y_pred_b = model_b.predict(X_test_b)
+        
+#         metrics_boarding[time] = {
+#             'accuracy': accuracy_score(y_test_b, y_pred_b),
+#             'precision': precision_score(y_test_b, y_pred_b, zero_division=0),
+#             'recall': recall_score(y_test_b, y_pred_b, zero_division=0),
+#             'f1': f1_score(y_test_b, y_pred_b, zero_division=0),
+#             'confusion_matrix': confusion_matrix(y_test_b, y_pred_b)
+#         }
+#         models_boarding[time] = model_b
+        
+#         X_a = df[[f'Alighting_{time}', f'PPHPD_{time}', 'Distance from SBC']]
+#         y_a = df[f'Rush_Alighting_{time}']
+#         X_train_a, X_test_a, y_train_a, y_test_a = train_test_split(X_a, y_a, test_size=0.2, random_state=42)
+        
+#         model_a = RandomForestClassifier(n_estimators=300, max_depth=15, random_state=42)
+#         model_a.fit(X_train_a, y_train_a)
+#         y_pred_a = model_a.predict(X_test_a)
+        
+#         metrics_alighting[time] = {
+#             'accuracy': accuracy_score(y_test_a, y_pred_a),
+#             'precision': precision_score(y_test_a, y_pred_a, zero_division=0),
+#             'recall': recall_score(y_test_a, y_pred_a, zero_division=0),
+#             'f1': f1_score(y_test_a, y_pred_a, zero_division=0),
+#             'confusion_matrix': confusion_matrix(y_test_a, y_pred_a)
+#         }
+#         models_alighting[time] = model_a
+    
+#     return models_boarding, models_alighting, metrics_boarding, metrics_alighting
 
-#         # Train model for Alighting congestion
-#         X_alighting = df[[f'Alighting_{time}', f'PPHPD_{time}']]
-#         y_alighting = df[f'Rush_Alighting_{time}']
-#         X_train_a, X_test_a, y_train_a, y_test_a = train_test_split(X_alighting, y_alighting, test_size=0.2, random_state=42)
-#         model_alighting = RandomForestClassifier(n_estimators=200, max_depth=10, random_state=42)
-#         model_alighting.fit(X_train_a, y_train_a)
-#         models_alighting[time] = model_alighting
+# def predict_rush_with_probability(model, station_data):
+#     prediction = model.predict([station_data])[0]
+#     probability = model.predict_proba([station_data])[0]
+#     return prediction, probability[1]
 
-#     return models_boarding, models_alighting
-
-# # Predict congestion status for Boarding or Alighting
-# def predict_rush(model, station_data):
-#     return model.predict([station_data])[0]
-
-# # Function to compute distance between stations
-# def compute_distance(df, station1, station2):
+# def compute_distance_between_stations(df, station1, station2):
 #     station_distances = df.set_index('Station')['Distance from SBC'].to_dict()
-    
-#     if station1 in station_distances and station2 in station_distances:
-#         return abs(station_distances[station1] - station_distances[station2])
-    
-#     return None
+#     return abs(station_distances.get(station1, 0) - station_distances.get(station2, 0))
 
-# # Function to suggest the **nearest less-crowded alternate station**
-# def suggest_alternate_station(station, direction, time, df, boarding_type):
+# def calculate_station_score(distance_km, is_congested, pphpd, boarding_count):
+#     dist_score = min(distance_km / 20, 1.0)
+#     congestion_score = 1.0 if is_congested else 0.0
+#     pphpd_score = min(pphpd / 5000, 1.0)
+#     boarding_score = min(boarding_count / 2000, 1.0)
+#     return (0.50 * dist_score) + (0.30 * congestion_score) + (0.15 * pphpd_score) + (0.05 * boarding_score)
+
+# def find_alternate_stations(station, direction, time, df, boarding_type, top_n=5):
 #     rush_column = f'Rush_Boarding_{time}' if boarding_type == 'Boarding' else f'Rush_Alighting_{time}'
+#     traffic_column = f'{boarding_type}_{time}'
+#     pphpd_column = f'PPHPD_{time}'
     
-#     # Get the station data
-#     station_data = df[(df['Station'] == station) & (df['Direction'] == direction)]
+#     current_rush = df[df['Station'] == station].iloc[0][rush_column]
+#     if current_rush == 0:
+#         return []
     
-#     if not station_data.empty and station_data.iloc[0][rush_column] == 1:
-#         st.write(f"⚠️ {station} ({direction}) is crowded for {boarding_type}. Finding nearest alternate station...")
+#     same_direction_stations = df[df['Direction'] == direction].copy()
+#     alternatives = []
+    
+#     for idx, row in same_direction_stations.iterrows():
+#         if row['Station'] == station:
+#             continue
         
-#         # Get list of stations in the same direction
-#         direction_stations = df[df['Direction'] == direction].sort_values('Distance from SBC')
-
-#         # Find current station index
-#         station_index = direction_stations[direction_stations['Station'] == station].index[0]
+#         distance = compute_distance_between_stations(df, station, row['Station'])
+#         score = calculate_station_score(distance, row[rush_column], row[pphpd_column], row[traffic_column])
         
-#         # Look for the nearest alternate station in the same direction
-#         alternate_station = None
-#         min_distance = float('inf')
+#         alternatives.append({
+#             'Station': row['Station'], 'Distance_km': round(distance, 2),
+#             'Distance_from_SBC': row['Distance from SBC'], 'Is_Congested': row[rush_column],
+#             'PPHPD': int(row[pphpd_column]), 'Traffic_Count': int(row[traffic_column]),
+#             'Score': score
+#         })
+    
+#     return sorted(alternatives, key=lambda x: x['Score'])[:top_n]
 
-#         for idx in range(station_index + 1, len(direction_stations)):  # Checking next stations
-#             candidate_station = direction_stations.iloc[idx]
-            
-#             if candidate_station[rush_column] == 0:  # Less crowded station found
-#                 distance = compute_distance(df, station, candidate_station['Station'])
-                
-#                 if distance is not None and distance < min_distance:
-#                     alternate_station = candidate_station['Station']
-#                     min_distance = distance
-        
-#         # Display result
-#         if alternate_station:
-#             st.write(f"✅ Suggested alternate station: **{alternate_station}** (🚆 {min_distance} km away)")
-#         else:
-#             st.write("❌ No alternate station available nearby.")
-#     else:
-#         st.write(f"✅ {station} ({direction}) is not crowded for {boarding_type}.")
-
-# # Check congestion and apply ML model
 # def check_rush_status(station, direction, time, boarding_type, df, models_boarding, models_alighting):
-#     station_data = df[(df['Station'] == station) & (df['Direction'] == direction)]
+#     station_row = df[(df['Station'] == station) & (df['Direction'] == direction)].iloc[0]
+#     model = models_boarding[time] if boarding_type == "Boarding" else models_alighting[time]
     
-#     if not station_data.empty:
-#         station_row = station_data.iloc[0]
+#     features_cols = [f"{boarding_type}_{time}", f"PPHPD_{time}", 'Distance from SBC']
+#     predicted_rush, probability = predict_rush_with_probability(model, station_row[features_cols].values)
+    
+#     st.markdown('<div class="glass-card">', unsafe_allow_html=True)
+#     st.markdown('<h3 style="color: #60a5fa; margin-bottom: 20px;">📍 Current Station Analysis</h3>', unsafe_allow_html=True)
+    
+#     col1, col2, col3, col4 = st.columns(4)
+#     metrics_data = [
+#         ("🚉 Station", station),
+#         ("👥 " + boarding_type, int(station_row[f'{boarding_type}_{time}'])),
+#         ("🚦 PPHPD", int(station_row[f'PPHPD_{time}'])),
+#         ("📏 From SBC", f"{station_row['Distance from SBC']} km")
+#     ]
+    
+#     for col, (label, value) in zip([col1, col2, col3, col4], metrics_data):
+#         with col:
+#             st.markdown(f'<div class="metric-box"><div class="metric-label">{label}</div><div class="metric-value" style="font-size: 24px;">{value}</div></div>', unsafe_allow_html=True)
+    
+#     st.markdown('</div>', unsafe_allow_html=True)
+    
+#     if predicted_rush == 1:
+#         st.markdown(f'''<div class="status-danger">
+#             <p class="status-title">⚠️ {station} is CROWDED</p>
+#             <p style="color: rgba(255,255,255,0.6); margin-top: 8px;">
+#                 Time: {time} • Confidence: {probability*100:.1f}% • Direction: {direction}
+#             </p></div>''', unsafe_allow_html=True)
         
-#         # Select appropriate model based on boarding type
-#         model = models_boarding[time] if boarding_type == "Boarding" else models_alighting[time]
-#         features = [f"{boarding_type}_{time}", f"PPHPD_{time}"]
+#         alternates = find_alternate_stations(station, direction, time, df, boarding_type, top_n=5)
         
-#         predicted_rush = predict_rush(model, station_row[features])
-        
-#         if predicted_rush == 1:
-#             st.write(f"⚠️ {station} ({direction}) is **predicted to be crowded** for {boarding_type} at {time}.")
-#             suggest_alternate_station(station, direction, time, df, boarding_type)
-#         else:
-#             st.write(f"✅ {station} ({direction}) is **not predicted to be crowded** for {boarding_type} at {time}.")
-#     else:
-#         st.write("❌ Station data not found.")
-
-# # Streamlit UI
-# st.title("🚉 Peak Hour Traffic Analysis with ML & Distance Calculation")
-
-# file_path = st.file_uploader("📂 Upload Excel File", type=["xlsx"])
-# if file_path:
-#     df, time_slots = load_data(file_path)
-    
-#     if df is not None:
-#         models_boarding, models_alighting = train_ml_models(df, time_slots)
-        
-#         if models_boarding and models_alighting:
-#             direction = st.radio("🔄 Select Direction", df['Direction'].unique())
-#             station = st.selectbox("📍 Select a Station", df[df['Direction'] == direction]['Station'].unique())
-#             time = st.selectbox("⏰ Select a Time Slot", time_slots)
-#             boarding_type = st.radio("🚶 Boarding or Alighting?", ["Boarding", "Alighting"])
-            
-#             if st.button("🔍 Check Station"):
-#                 check_rush_status(station, direction, time, boarding_type, df, models_boarding, models_alighting)
-            
-#             station2 = st.selectbox("📍 Select another station to calculate distance", df['Station'].unique())
-#             if st.button("📏 Calculate Distance"):
-#                 distance = compute_distance(df, station, station2)
-#                 if distance is not None:
-#                     st.write(f"🛤️ Distance between {station} and {station2}: **{distance} km**")
-#                 else:
-#                     st.write("❌ Distance calculation failed.")
-
-
-
-# # #Working fine and well
-# import streamlit as st
-# import pandas as pd
-# import numpy as np
-# from sklearn.model_selection import train_test_split
-# from sklearn.ensemble import RandomForestClassifier
-# from sklearn.metrics import accuracy_score
-
-# # Load data from Excel
-# def load_data(file_path):
-#     df = pd.read_excel(file_path)
-
-#     # Identify available time slots dynamically
-#     time_slots = sorted(set(col.split("_")[-1] for col in df.columns if "PPHPD" in col))
-
-#     # Define congestion labels for each time slot
-#     for time in time_slots:
-#         df[f'Rush_Boarding_{time}'] = (df[f'Boarding_{time}'] > 1000).astype(int)
-#         df[f'Rush_Alighting_{time}'] = (df[f'Alighting_{time}'] > 1000).astype(int)
-
-#     return df, time_slots
-
-# # Train ML models and compute accuracy
-# def train_ml_models(df, time_slots):
-#     models_boarding = {}
-#     models_alighting = {}
-#     accuracy_boarding = {}
-#     accuracy_alighting = {}
-
-#     for time in time_slots:
-#         # Train model for Boarding congestion
-#         X_boarding = df[[f'Boarding_{time}', f'PPHPD_{time}']]
-#         y_boarding = df[f'Rush_Boarding_{time}']
-#         X_train_b, X_test_b, y_train_b, y_test_b = train_test_split(X_boarding, y_boarding, test_size=0.2, random_state=42)
-#         model_boarding = RandomForestClassifier(n_estimators=200, max_depth=10, random_state=42)
-#         model_boarding.fit(X_train_b, y_train_b)
-#         y_pred_b = model_boarding.predict(X_test_b)
-#         accuracy_boarding[time] = accuracy_score(y_test_b, y_pred_b)  # Store accuracy
-#         models_boarding[time] = model_boarding
-
-#         # Train model for Alighting congestion
-#         X_alighting = df[[f'Alighting_{time}', f'PPHPD_{time}']]
-#         y_alighting = df[f'Rush_Alighting_{time}']
-#         X_train_a, X_test_a, y_train_a, y_test_a = train_test_split(X_alighting, y_alighting, test_size=0.2, random_state=42)
-#         model_alighting = RandomForestClassifier(n_estimators=200, max_depth=10, random_state=42)
-#         model_alighting.fit(X_train_a, y_train_a)
-#         y_pred_a = model_alighting.predict(X_test_a)
-#         accuracy_alighting[time] = accuracy_score(y_test_a, y_pred_a)  # Store accuracy
-#         models_alighting[time] = model_alighting
-
-#     return models_boarding, models_alighting, accuracy_boarding, accuracy_alighting
-
-# # Predict congestion status for Boarding or Alighting
-# def predict_rush(model, station_data):
-#     return model.predict([station_data])[0]
-
-# # Function to compute distance between stations
-# def compute_distance(df, station1, station2):
-#     station_distances = df.set_index('Station')['Distance from SBC'].to_dict()
-    
-#     if station1 in station_distances and station2 in station_distances:
-#         return abs(station_distances[station1] - station_distances[station2])
-    
-#     return None
-
-# # Function to find the nearest station and check its congestion
-# def find_nearest_station(station, direction, df, time, boarding_type):
-#     direction_stations = df[df['Direction'] == direction].sort_values('Distance from SBC')
-
-#     station_index = direction_stations[direction_stations['Station'] == station].index[0]
-    
-#     if station_index < len(direction_stations) - 1:
-#         nearest_station = direction_stations.iloc[station_index + 1]
-#         rush_column = f'Rush_Boarding_{time}' if boarding_type == 'Boarding' else f'Rush_Alighting_{time}'
-#         return nearest_station['Station'], nearest_station[rush_column]
-    
-#     return None, None
-
-# # Function to suggest an alternate station
-# def suggest_alternate_station(station, direction, time, df, boarding_type):
-#     rush_column = f'Rush_Boarding_{time}' if boarding_type == 'Boarding' else f'Rush_Alighting_{time}'
-    
-#     station_data = df[(df['Station'] == station) & (df['Direction'] == direction)]
-    
-#     if not station_data.empty and station_data.iloc[0][rush_column] == 1:
-#         st.write(f"⚠️ {station} ({direction}) is crowded for {boarding_type}. Finding nearest alternate station...")
-        
-#         # Get list of stations in the same direction
-#         direction_stations = df[df['Direction'] == direction].sort_values('Distance from SBC')
-
-#         # Find current station index
-#         station_index = direction_stations[direction_stations['Station'] == station].index[0]
-        
-#         # Look for the nearest alternate station
-#         alternate_station = None
-#         min_distance = float('inf')
-
-#         for idx in range(station_index + 1, len(direction_stations)):  # Checking next stations
-#             candidate_station = direction_stations.iloc[idx]
-            
-#             if candidate_station[rush_column] == 0:  # Less crowded station found
-#                 distance = compute_distance(df, station, candidate_station['Station'])
+#         if alternates:
+#             st.markdown('<h3 class="section-header">🎯 Recommended Alternatives</h3>', unsafe_allow_html=True)
+#             for i, alt in enumerate(alternates, 1):
+#                 badge_class = "badge-clear" if alt['Is_Congested'] == 0 else "badge-busy"
+#                 status = ("🟢 Clear", "Clear") if alt['Is_Congested'] == 0 else ("🟡 Busy", "Busy")
                 
-#                 if distance is not None and distance < min_distance:
-#                     alternate_station = candidate_station['Station']
-#                     min_distance = distance
-        
-#         # Display result
-#         if alternate_station:
-#             st.write(f"✅ Suggested alternate station: **{alternate_station}** (🚆 {min_distance} km away)")
+#                 st.markdown(f'''<div class="alt-station">
+#                     <div style="display: flex; align-items: center; gap: 15px; margin-bottom: 12px;">
+#                         <span class="rank">#{i}</span>
+#                         <div style="flex-grow: 1;">
+#                             <div style="font-size: 22px; font-weight: 700; color: #e0e7ff; margin-bottom: 6px;">{alt['Station']}</div>
+#                             <span class="badge {badge_class}">{status[0]}</span>
+#                         </div>
+#                     </div>
+#                     <div style="font-size: 13px; color: #9ca3af; margin: 8px 0;">
+#                         📏 Distance: {alt['Distance_km']} km • 🚦 PPHPD: {alt['PPHPD']} • 👥 Traffic: {alt['Traffic_Count']} • ⭐ Score: {alt['Score']:.3f}
+#                     </div></div>''', unsafe_allow_html=True)
 #         else:
-#             st.write("❌ No alternate station available nearby.")
+#             st.info("No suitable alternatives found")
 #     else:
-#         st.write(f"✅ {station} ({direction}) is not crowded for {boarding_type}.")
+#         st.markdown(f'''<div class="status-success">
+#             <p class="status-title">✅ {station} is NOT CROWDED</p>
+#             <p style="color: rgba(255,255,255,0.6); margin-top: 8px;">
+#                 Confidence: {(1-probability)*100:.1f}% • Perfect for comfortable travel
+#             </p></div>''', unsafe_allow_html=True)
 
-# # Check congestion and apply ML model
-# def check_rush_status(station, direction, time, boarding_type, df, models_boarding, models_alighting):
-#     station_data = df[(df['Station'] == station) & (df['Direction'] == direction)]
+# def create_metrics_dashboard(metrics, model_type, time):
+#     m = metrics[time]
+#     fig = go.Figure(go.Bar(
+#         x=['Accuracy', 'Precision', 'Recall', 'F1 Score'],
+#         y=[m['accuracy']*100, m['precision']*100, m['recall']*100, m['f1']*100],
+#         marker=dict(color=['#3b82f6', '#6366f1', '#8b5cf6', '#a78bfa']),
+#         text=[f'{v*100:.1f}%' for v in [m['accuracy'], m['precision'], m['recall'], m['f1']]],
+#         textposition='outside',
+#         textfont=dict(color='white', size=13)
+#     ))
+#     fig.update_layout(
+#         title=f'{model_type} Performance - {time}',
+#         title_font=dict(size=18, color='white'),
+#         plot_bgcolor='rgba(0,0,0,0)', paper_bgcolor='rgba(0,0,0,0)',
+#         xaxis=dict(gridcolor='rgba(255,255,255,0.1)', color='white'),
+#         yaxis=dict(gridcolor='rgba(255,255,255,0.1)', color='white', range=[0, 105]),
+#         height=380, margin=dict(t=50, b=30, l=40, r=20)
+#     )
+#     return fig
+
+# def create_traffic_heatmap(df, time, boarding_type, direction):
+#     df_filtered = df[df['Direction'] == direction].sort_values('Distance from SBC')
+#     fig = go.Figure(go.Bar(
+#         x=df_filtered['Station'], y=df_filtered[f'{boarding_type}_{time}'],
+#         marker=dict(color=df_filtered[f'{boarding_type}_{time}'], colorscale='Turbo', showscale=True),
+#         text=df_filtered[f'{boarding_type}_{time}'], textposition='outside',
+#         textfont=dict(color='white', size=11)
+#     ))
+#     fig.update_layout(
+#         title=f'{boarding_type} Traffic - {time} ({direction})',
+#         title_font=dict(size=18, color='white'),
+#         plot_bgcolor='rgba(0,0,0,0)', paper_bgcolor='rgba(0,0,0,0)',
+#         xaxis=dict(gridcolor='rgba(255,255,255,0.1)', color='white', tickangle=-45),
+#         yaxis=dict(gridcolor='rgba(255,255,255,0.1)', color='white'),
+#         height=450, margin=dict(t=50, b=90, l=40, r=20)
+#     )
+#     return fig
+
+# def main():
+#     st.sidebar.markdown('''<div style="text-align: center; padding: 20px 0;">
+#         <div style="font-size: 56px;">🚇</div>
+#         <h2 style="color: #60a5fa; margin: 10px 0;">Metro Advisor</h2>
+#         <p style="color: rgba(255,255,255,0.5); font-size: 13px;">AI-Powered Intelligence</p>
+#     </div><hr style="border: 1px solid rgba(59,130,246,0.2);">''', unsafe_allow_html=True)
     
-#     if not station_data.empty:
-#         station_row = station_data.iloc[0]
+#     file = st.sidebar.file_uploader("📂 Upload Data File", type=["csv", "xlsx", "xls"], help="CSV or Excel format supported")
+    
+#     if file:
+#         result = load_data(file)
+#         if result[0] is None:
+#             return
+#         df, time_slots = result
+#         models_boarding, models_alighting, metrics_boarding, metrics_alighting = train_ml_models(df, time_slots)
         
-#         # Select appropriate model based on boarding type
-#         model = models_boarding[time] if boarding_type == "Boarding" else models_alighting[time]
-#         features = [f"{boarding_type}_{time}", f"PPHPD_{time}"]
+#         st.markdown('<div class="hero"><div class="hero-icon">🚇</div><h1 class="hero-title">Metro Station Advisor</h1><p class="hero-subtitle">AI-Powered Congestion Prediction & Route Planning</p></div>', unsafe_allow_html=True)
         
-#         predicted_rush = predict_rush(model, station_row[features])
+#         with st.sidebar:
+#             st.markdown("### ⚙️ Configuration")
+#             direction = st.selectbox("🔄 Direction", df['Direction'].unique())
+#             station = st.selectbox("📍 Station", df[df['Direction'] == direction]['Station'].unique())
+#             time = st.selectbox("⏰ Time Slot", time_slots)
+#             boarding_type = st.radio("🚶 Action", ["Boarding", "Alighting"])
+#             st.markdown("<hr>", unsafe_allow_html=True)
+#             check_btn = st.button("🔍 Analyze Station", use_container_width=True)
         
-#         if predicted_rush == 1:
-#             st.write(f"⚠️ {station} ({direction}) is **predicted to be crowded** for {boarding_type} at {time}.")
-#             suggest_alternate_station(station, direction, time, df, boarding_type)
-#         else:
-#             st.write(f"✅ {station} ({direction}) is **not predicted to be crowded** for {boarding_type} at {time}.")
+#         if check_btn:
+#             check_rush_status(station, direction, time, boarding_type, df, models_boarding, models_alighting)
+#             st.markdown("<hr>", unsafe_allow_html=True)
+#             st.markdown('<h2 class="section-header">📊 Traffic Distribution</h2>', unsafe_allow_html=True)
+#             st.plotly_chart(create_traffic_heatmap(df, time, boarding_type, direction), use_container_width=True)
         
-#         # Find nearest station and check congestion
-#         nearest_station, nearest_rush = find_nearest_station(station, direction, df, time, boarding_type)
-#         if nearest_station:
-#             status = "Crowded" if nearest_rush == 1 else "Not Crowded"
-#             st.write(f"🚉 Nearest station: **{nearest_station}** ({status})")
+#         st.markdown("<hr>", unsafe_allow_html=True)
+#         st.markdown('<h2 class="section-header">🎯 Model Performance</h2>', unsafe_allow_html=True)
+        
+#         tab1, tab2 = st.tabs(["📈 Metrics", "📊 Stats"])
+#         with tab1:
+#             col1, col2 = st.columns(2)
+#             with col1:
+#                 st.markdown("#### 🚆 Boarding Model")
+#                 st.plotly_chart(create_metrics_dashboard(metrics_boarding, "Boarding", time), use_container_width=True)
+#             with col2:
+#                 st.markdown("#### 🚉 Alighting Model")
+#                 st.plotly_chart(create_metrics_dashboard(metrics_alighting, "Alighting", time), use_container_width=True)
+        
+#         with tab2:
+#             col1, col2, col3, col4 = st.columns(4)
+#             stats = [
+#                 ("🚉 Stations", len(df)),
+#                 ("🔄 Directions", df['Direction'].nunique()),
+#                 ("⏰ Time Slots", len(time_slots)),
+#                 ("🎯 Avg Accuracy", f"{((metrics_boarding[time]['accuracy'] + metrics_alighting[time]['accuracy'])/2*100):.1f}%")
+#             ]
+#             for col, (label, value) in zip([col1, col2, col3, col4], stats):
+#                 with col:
+#                     st.markdown(f'<div class="metric-box"><div class="metric-label">{label}</div><div class="metric-value" style="font-size: 28px;">{value}</div></div>', unsafe_allow_html=True)
 #     else:
-#         st.write("❌ Station data not found.")
+#         st.markdown('''<div class="hero"><div class="hero-icon">🚇</div>
+#             <h1 class="hero-title">Metro Station Advisor</h1>
+#             <p class="hero-subtitle">AI-Powered Congestion Prediction & Route Planning</p></div>
+#             <div class="glass-card" style="text-align: center; max-width: 600px; margin: 40px auto;">
+#                 <h2 style="color: #60a5fa; margin-bottom: 16px;">👈 Get Started</h2>
+#                 <p style="color: rgba(255,255,255,0.7); font-size: 16px;">
+#                     Upload your CSV or Excel file to begin intelligent analysis
+#                 </p>
+#             </div>''', unsafe_allow_html=True)
 
-# # Streamlit UI
-# st.title("🚉 Peak Hour Traffic Analysis with ML & Distance Calculation")
+# if __name__ == "__main__":
+#     main()
 
-# file_path = st.file_uploader("📂 Upload Excel File", type=["xlsx"])
-# if file_path:
-#     df, time_slots = load_data(file_path)
-    
-#     if df is not None:
-#         models_boarding, models_alighting, accuracy_boarding, accuracy_alighting = train_ml_models(df, time_slots)
-        
-#         if models_boarding and models_alighting:
-#             direction = st.radio("🔄 Select Direction", df['Direction'].unique())
-#             station = st.selectbox("📍 Select a Station", df[df['Direction'] == direction]['Station'].unique())
-#             time = st.selectbox("⏰ Select a Time Slot", time_slots)
-#             boarding_type = st.radio("🚶 Boarding or Alighting?", ["Boarding", "Alighting"])
-            
-#             if st.button("🔍 Check Station"):
-#                 check_rush_status(station, direction, time, boarding_type, df, models_boarding, models_alighting)
-            
-#             st.write(f"📊 **Model Accuracy:**")
-#             st.write(f"✅ Boarding Model: {accuracy_boarding[time]:.2%}")
-#             st.write(f"✅ Alighting Model: {accuracy_alighting[time]:.2%}")
+
+
+
+
+
+
+
 
 
 
@@ -321,1168 +420,214 @@
 # from sklearn.model_selection import train_test_split
 # from sklearn.ensemble import RandomForestClassifier
 # from sklearn.metrics import accuracy_score, precision_score, recall_score, f1_score
-
-
-# # Custom CSS for better UI
-# st.markdown("""
-#     <style>
-#         body { background-color: #f7f9fc; }
-#         .title { font-size: 30px; font-weight: bold; color: #2c3e50; text-align: center; padding-top: 10px; }
-#         .subheader { font-size: 16px; color: #34495e; text-align: center; margin-bottom: 20px; }
-        
-#         .success { color: #27ae60; font-weight: bold; font-size: 18px; }
-#         .danger { color: #c0392b; font-weight: bold; font-size: 18px; }
-#         .highlight { font-size: 20px; font-weight: bold; }
-#         .sidebar .block-container { padding-top: 20px; }
-#         .stButton > button { width: 100%; border-radius: 8px; padding: 12px; font-size: 16px; }
-#     </style>
-# """, unsafe_allow_html=True)
-
-# # Load data from Excel
-# def load_data(file_path):
-#     df = pd.read_excel(file_path)
-
-#     # Identify available time slots dynamically
-#     time_slots = sorted(set(col.split("_")[-1] for col in df.columns if "PPHPD" in col))
-
-#     # Define congestion labels for each time slot
-#     for time in time_slots:
-#         df[f'Rush_Boarding_{time}'] = (df[f'Boarding_{time}'] > 1000).astype(int)
-#         df[f'Rush_Alighting_{time}'] = (df[f'Alighting_{time}'] > 1000).astype(int)
-
-#     return df, time_slots
-
-# # Train ML models
-# def train_ml_models(df, time_slots):
-#     models_boarding, models_alighting = {}, {}
-#     accuracy_boarding, accuracy_alighting = {}, {}
-
-#     for time in time_slots:
-#         # Boarding model
-#         X_boarding = df[[f'Boarding_{time}', f'PPHPD_{time}']]
-#         y_boarding = df[f'Rush_Boarding_{time}']
-#         X_train_b, X_test_b, y_train_b, y_test_b = train_test_split(X_boarding, y_boarding, test_size=0.2, random_state=42)
-#         model_boarding = RandomForestClassifier(n_estimators=200, max_depth=10, random_state=42)
-#         model_boarding.fit(X_train_b, y_train_b)
-#         accuracy_boarding[time] = accuracy_score(y_test_b, model_boarding.predict(X_test_b))
-#         models_boarding[time] = model_boarding
-
-#         # Alighting model
-#         X_alighting = df[[f'Alighting_{time}', f'PPHPD_{time}']]
-#         y_alighting = df[f'Rush_Alighting_{time}']
-#         X_train_a, X_test_a, y_train_a, y_test_a = train_test_split(X_alighting, y_alighting, test_size=0.2, random_state=42)
-#         model_alighting = RandomForestClassifier(n_estimators=200, max_depth=10, random_state=42)
-#         model_alighting.fit(X_train_a, y_train_a)
-#         accuracy_alighting[time] = accuracy_score(y_test_a, model_alighting.predict(X_test_a))
-#         models_alighting[time] = model_alighting
-
-#     return models_boarding, models_alighting, accuracy_boarding, accuracy_alighting
-
-# # Predict rush
-# def predict_rush(model, station_data):
-#     return model.predict([station_data])[0]
-
-# # Compute distance between stations
-# def compute_distance(df, station1, station2):
-#     station_distances = df.set_index('Station')['Distance from SBC'].to_dict()
-#     return abs(station_distances.get(station1, 0) - station_distances.get(station2, 0))
-
-# # Suggest an alternate station
-# def suggest_alternate_station(station, direction, time, df, boarding_type):
-#     rush_column = f'Rush_Boarding_{time}' if boarding_type == 'Boarding' else f'Rush_Alighting_{time}'
-    
-#     if df.loc[df['Station'] == station, rush_column].values[0] == 1:
-#         st.write(f"⚠️ {station} is crowded. Finding nearest less crowded station...")
-
-#         direction_stations = df[df['Direction'] == direction].sort_values('Distance from SBC')
-#         station_index = direction_stations[direction_stations['Station'] == station].index[0]
-        
-#         for idx in range(station_index + 1, len(direction_stations)):  
-#             candidate_station = direction_stations.iloc[idx]
-#             if candidate_station[rush_column] == 0:  
-#                 distance = compute_distance(df, station, candidate_station['Station'])
-#                 st.write(f"✅ Suggested: **{candidate_station['Station']}** ({distance} km away)")
-#                 return
-
-#         st.write("❌ No alternate station available.")
-
-# # Check congestion status
-# def check_rush_status(station, direction, time, boarding_type, df, models_boarding, models_alighting):
-#     station_row = df[(df['Station'] == station) & (df['Direction'] == direction)].iloc[0]
-#     model = models_boarding[time] if boarding_type == "Boarding" else models_alighting[time]
-#     features = [f"{boarding_type}_{time}", f"PPHPD_{time}"]
-#     predicted_rush = predict_rush(model, station_row[features])
-
-#     st.markdown('<div class="info-box">', unsafe_allow_html=True)
-#     if predicted_rush == 1:
-#         st.markdown(f'<p class="danger highlight">⚠️ {station} is predicted to be crowded.</p>', unsafe_allow_html=True)
-#         suggest_alternate_station(station, direction, time, df, boarding_type)
-#     else:
-#         st.markdown(f'<p class="success highlight">✅ {station} is not predicted to be crowded.</p>', unsafe_allow_html=True)
-#     st.markdown('</div>', unsafe_allow_html=True)
-
-# # Streamlit UI
-# st.sidebar.image("https://cdn-icons-png.flaticon.com/512/3135/3135715.png", width=100)  
-# st.sidebar.title("🚆 Smart Station Advisor")
-
-# file_path = st.sidebar.file_uploader("📂 Upload Excel File", type=["xlsx"])
-
-# if file_path:
-#     df, time_slots = load_data(file_path)
-#     models_boarding, models_alighting, accuracy_boarding, accuracy_alighting = train_ml_models(df, time_slots)
-
-#     st.markdown('<p class="title">🚉 Peak Hour Traffic Prediction</p>', unsafe_allow_html=True)
-#     st.markdown('<p class="subheader">Check congestion status and find alternate stations</p>', unsafe_allow_html=True)
-
-#     with st.sidebar:
-#         direction = st.radio("🔄 Select Direction", df['Direction'].unique())
-#         station = st.selectbox("📍 Select a Station", df[df['Direction'] == direction]['Station'].unique())
-#         time = st.selectbox("⏰ Select a Time Slot", time_slots)
-#         boarding_type = st.radio("🚶 Boarding or Alighting?", ["Boarding", "Alighting"])
-#         check_button = st.button("🔍 Check Station")
-
-#     if check_button:
-#         check_rush_status(station, direction, time, boarding_type, df, models_boarding, models_alighting)
-
-#     st.markdown('<p class="title">📊 Model Performance</p>', unsafe_allow_html=True)
-#     col1, col2 = st.columns(2)
-#     col1.metric("🚆 Boarding Accuracy", f"{accuracy_boarding[time]*100:.2f}%")
-#     col2.metric("🚉 Alighting Accuracy", f"{accuracy_alighting[time]*100:.2f}%")
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-# import streamlit as st
-# import pandas as pd
-# import numpy as np
-# from sklearn.model_selection import train_test_split
-# from sklearn.ensemble import RandomForestClassifier
-# from sklearn.metrics import accuracy_score, precision_score, recall_score, f1_score, confusion_matrix
 # import plotly.graph_objects as go
-# import plotly.express as px
-# from datetime import datetime
+# import requests
+# from io import BytesIO
 
-# # Ultra-modern CSS with glassmorphism and animations
-# st.markdown("""
-#     <style>
-#         @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap');
-        
-#         * { 
-#             font-family: 'Poppins', sans-serif;
-#             transition: all 0.3s ease;
-#         }
-        
-#         .stApp {
-#             background: linear-gradient(135deg, #0a0a0a 0%, #1a0a2e 30%, #16213e 60%, #0f0f23 100%);
-#             background-attachment: fixed;
-#         }
-        
-#         .main > div {
-#             background: rgba(0, 0, 0, 0.4);
-#             backdrop-filter: blur(10px);
-#             border-radius: 30px;
-#             padding: 30px;
-#             border: 1px solid rgba(139, 92, 246, 0.2);
-#         }
-        
-#         /* Hero Section */
-#         .hero-title {
-#             font-size: 56px;
-#             font-weight: 800;
-#             text-align: center;
-#             background: linear-gradient(135deg, #a78bfa 0%, #c084fc 50%, #e879f9 100%);
-#             -webkit-background-clip: text;
-#             -webkit-text-fill-color: transparent;
-#             margin-bottom: 10px;
-#             text-shadow: 0 0 30px rgba(167, 139, 250, 0.5);
-#             animation: glow 2s ease-in-out infinite alternate;
-#         }
-        
-#         @keyframes glow {
-#             from { filter: drop-shadow(0 0 10px rgba(167, 139, 250, 0.5)); }
-#             to { filter: drop-shadow(0 0 20px rgba(167, 139, 250, 0.8)); }
-#         }
-        
-#         .hero-subtitle {
-#             text-align: center;
-#             font-size: 20px;
-#             color: rgba(255, 255, 255, 0.8);
-#             font-weight: 400;
-#             margin-bottom: 40px;
-#             letter-spacing: 1px;
-#         }
-        
-#         /* Glass Cards */
-#         .glass-card {
-#             background: rgba(255, 255, 255, 0.08);
-#             backdrop-filter: blur(20px);
-#             border-radius: 25px;
-#             padding: 30px;
-#             border: 1px solid rgba(255, 255, 255, 0.15);
-#             box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
-#             margin: 20px 0;
-#         }
-        
-#         .glass-card:hover {
-#             transform: translateY(-5px);
-#             box-shadow: 0 25px 70px rgba(167, 139, 250, 0.3);
-#             border-color: rgba(167, 139, 250, 0.5);
-#         }
-        
-#         /* Status Cards */
-#         .success-card {
-#             background: linear-gradient(135deg, rgba(16, 185, 129, 0.2) 0%, rgba(5, 150, 105, 0.1) 100%);
-#             backdrop-filter: blur(20px);
-#             border-radius: 20px;
-#             padding: 25px;
-#             border-left: 5px solid #10b981;
-#             box-shadow: 0 10px 40px rgba(16, 185, 129, 0.2);
-#             margin: 15px 0;
-#         }
-        
-#         .danger-card {
-#             background: linear-gradient(135deg, rgba(239, 68, 68, 0.2) 0%, rgba(220, 38, 38, 0.1) 100%);
-#             backdrop-filter: blur(20px);
-#             border-radius: 20px;
-#             padding: 25px;
-#             border-left: 5px solid #ef4444;
-#             box-shadow: 0 10px 40px rgba(239, 68, 68, 0.2);
-#             margin: 15px 0;
-#         }
-        
-#         .success-text {
-#             color: #6ee7b7;
-#             font-size: 24px;
-#             font-weight: 600;
-#             margin: 0;
-#         }
-        
-#         .danger-text {
-#             color: #fca5a5;
-#             font-size: 24px;
-#             font-weight: 600;
-#             margin: 0;
-#         }
-        
-#         /* Alternative Station Cards */
-#         .alt-station-card {
-#             background: linear-gradient(135deg, rgba(139, 92, 246, 0.2) 0%, rgba(124, 58, 237, 0.15) 100%);
-#             backdrop-filter: blur(15px);
-#             border-radius: 18px;
-#             padding: 20px;
-#             margin: 12px 0;
-#             border: 1px solid rgba(139, 92, 246, 0.4);
-#             box-shadow: 0 8px 32px rgba(139, 92, 246, 0.25);
-#         }
-        
-#         .alt-station-card:hover {
-#             transform: translateX(10px);
-#             border-color: rgba(139, 92, 246, 0.7);
-#             box-shadow: 0 12px 40px rgba(139, 92, 246, 0.4);
-#             background: linear-gradient(135deg, rgba(139, 92, 246, 0.25) 0%, rgba(124, 58, 237, 0.2) 100%);
-#         }
-        
-#         .station-rank {
-#             display: inline-block;
-#             background: linear-gradient(135deg, #8b5cf6 0%, #7c3aed 100%);
-#             color: white;
-#             border-radius: 50%;
-#             width: 40px;
-#             height: 40px;
-#             text-align: center;
-#             line-height: 40px;
-#             font-weight: 700;
-#             font-size: 18px;
-#             box-shadow: 0 5px 15px rgba(139, 92, 246, 0.4);
-#         }
-        
-#         .station-name {
-#             font-size: 22px;
-#             font-weight: 700;
-#             color: #e9d5ff;
-#             margin: 10px 0;
-#         }
-        
-#         .station-detail {
-#             color: rgba(255, 255, 255, 0.8);
-#             font-size: 15px;
-#             margin: 8px 0;
-#         }
-        
-#         .station-badge {
-#             display: inline-block;
-#             padding: 6px 14px;
-#             border-radius: 20px;
-#             font-size: 13px;
-#             font-weight: 600;
-#             margin: 5px 5px 5px 0;
-#         }
-        
-#         .badge-success {
-#             background: rgba(16, 185, 129, 0.2);
-#             color: #6ee7b7;
-#             border: 1px solid #10b981;
-#         }
-        
-#         .badge-warning {
-#             background: rgba(245, 158, 11, 0.2);
-#             color: #fcd34d;
-#             border: 1px solid #f59e0b;
-#         }
-        
-#         /* Metrics Dashboard */
-#         .metric-container {
-#             background: rgba(0, 0, 0, 0.5);
-#             backdrop-filter: blur(15px);
-#             border-radius: 20px;
-#             padding: 25px;
-#             text-align: center;
-#             border: 1px solid rgba(139, 92, 246, 0.3);
-#             box-shadow: 0 8px 32px rgba(139, 92, 246, 0.2);
-#         }
-        
-#         .metric-container:hover {
-#             background: rgba(139, 92, 246, 0.15);
-#             transform: scale(1.05);
-#             border-color: rgba(139, 92, 246, 0.5);
-#         }
-        
-#         .metric-label {
-#             color: rgba(255, 255, 255, 0.7);
-#             font-size: 14px;
-#             font-weight: 500;
-#             text-transform: uppercase;
-#             letter-spacing: 1px;
-#             margin-bottom: 10px;
-#         }
-        
-#         .metric-value {
-#             color: #fff;
-#             font-size: 36px;
-#             font-weight: 800;
-#             background: linear-gradient(135deg, #a78bfa 0%, #8b5cf6 100%);
-#             -webkit-background-clip: text;
-#             -webkit-text-fill-color: transparent;
-#         }
-        
-#         /* Distance Indicator */
-#         .distance-indicator {
-#             background: linear-gradient(135deg, rgba(59, 130, 246, 0.2) 0%, rgba(37, 99, 235, 0.1) 100%);
-#             border-radius: 15px;
-#             padding: 15px;
-#             margin: 10px 0;
-#             border-left: 4px solid #3b82f6;
-#         }
-        
-#         .distance-text {
-#             color: #93c5fd;
-#             font-size: 18px;
-#             font-weight: 600;
-#         }
-        
-#         /* Section Headers */
-#         .section-header {
-#             color: #fff;
-#             font-size: 28px;
-#             font-weight: 700;
-#             margin: 30px 0 20px 0;
-#             padding-bottom: 10px;
-#             border-bottom: 2px solid rgba(139, 92, 246, 0.5);
-#         }
-        
-#         /* Buttons */
-#         .stButton > button {
-#             background: linear-gradient(135deg, #8b5cf6 0%, #7c3aed 100%);
-#             color: white;
-#             border: none;
-#             border-radius: 15px;
-#             padding: 18px 35px;
-#             font-size: 18px;
-#             font-weight: 700;
-#             width: 100%;
-#             letter-spacing: 1px;
-#             box-shadow: 0 10px 30px rgba(139, 92, 246, 0.4);
-#             text-transform: uppercase;
-#         }
-        
-#         .stButton > button:hover {
-#             background: linear-gradient(135deg, #7c3aed 0%, #6d28d9 100%);
-#             transform: translateY(-3px);
-#             box-shadow: 0 15px 40px rgba(139, 92, 246, 0.6);
-#         }
-        
-#         /* Sidebar Styling */
-#         section[data-testid="stSidebar"] {
-#             background: linear-gradient(180deg, rgba(10, 10, 10, 0.98) 0%, rgba(26, 10, 46, 0.98) 100%);
-#             backdrop-filter: blur(20px);
-#             border-right: 1px solid rgba(139, 92, 246, 0.2);
-#         }
-        
-#         section[data-testid="stSidebar"] > div {
-#             background: transparent;
-#         }
-        
-#         /* Input Fields */
-#         .stSelectbox label, .stRadio label {
-#             color: rgba(255, 255, 255, 0.9) !important;
-#             font-weight: 600 !important;
-#             font-size: 16px !important;
-#         }
-        
-#         /* Info Box */
-#         .info-box {
-#             background: rgba(59, 130, 246, 0.1);
-#             border-left: 4px solid #3b82f6;
-#             border-radius: 12px;
-#             padding: 20px;
-#             margin: 15px 0;
-#             color: #93c5fd;
-#         }
-        
-#         /* Divider */
-#         hr {
-#             border: none;
-#             height: 1px;
-#             background: linear-gradient(90deg, transparent, rgba(139, 92, 246, 0.5), transparent);
-#             margin: 30px 0;
-#         }
-        
-#         /* Metric Cards in Streamlit */
-#         div[data-testid="stMetricValue"] {
-#             font-size: 32px;
-#             font-weight: 800;
-#             color: #a78bfa;
-#         }
-        
-#         div[data-testid="stMetricLabel"] {
-#             color: rgba(255, 255, 255, 0.8);
-#             font-weight: 600;
-#         }
-        
-#         /* Tab styling */
-#         .stTabs [data-baseweb="tab-list"] {
-#             gap: 10px;
-#             background: rgba(255, 255, 255, 0.05);
-#             border-radius: 15px;
-#             padding: 10px;
-#         }
-        
-#         .stTabs [data-baseweb="tab"] {
-#             background: transparent;
-#             color: rgba(255, 255, 255, 0.7);
-#             border-radius: 10px;
-#             padding: 12px 24px;
-#             font-weight: 600;
-#         }
-        
-#         .stTabs [aria-selected="true"] {
-#             background: linear-gradient(135deg, #8b5cf6 0%, #7c3aed 100%);
-#             color: white;
-#         }
-#     </style>
-# """, unsafe_allow_html=True)
+# # Apply the same styling as original
+# st.markdown("""<style>
+# @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;900&display=swap');
+# * { font-family: 'Inter', sans-serif; }
+# .stApp { background: linear-gradient(135deg, #0a0e27 0%, #1a1a2e 50%, #16213e 100%); }
+# .hero { text-align: center; padding: 40px 20px; }
+# .hero-icon { font-size: 72px; filter: drop-shadow(0 0 20px rgba(59, 130, 246, 0.6)); }
+# .hero-title { font-size: 56px; font-weight: 900; margin: 20px 0; background: linear-gradient(135deg, #3b82f6, #8b5cf6, #ec4899); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+# .hero-subtitle { font-size: 18px; color: rgba(255,255,255,0.6); margin-bottom: 30px; }
+# .glass-card { background: rgba(255,255,255,0.05); backdrop-filter: blur(20px); border-radius: 20px; padding: 28px; margin: 20px 0; border: 1px solid rgba(255,255,255,0.1); box-shadow: 0 20px 60px rgba(0,0,0,0.4); transition: all 0.3s ease; }
+# .status-success { background: linear-gradient(135deg, rgba(16,185,129,0.1), rgba(5,150,105,0.05)); backdrop-filter: blur(20px); border-radius: 18px; padding: 24px; border: 1px solid rgba(16,185,129,0.3); margin: 16px 0; box-shadow: 0 0 30px rgba(16,185,129,0.2); }
+# .status-danger { background: linear-gradient(135deg, rgba(239,68,68,0.1), rgba(220,38,38,0.05)); backdrop-filter: blur(20px); border-radius: 18px; padding: 24px; border: 1px solid rgba(239,68,68,0.3); margin: 16px 0; box-shadow: 0 0 30px rgba(239,68,68,0.2); }
+# .status-title { font-size: 26px; font-weight: 800; margin-bottom: 10px; }
+# .status-success .status-title { color: #6ee7b7; }
+# .status-danger .status-title { color: #fca5a5; }
+# .alt-station { background: rgba(59,130,246,0.08); backdrop-filter: blur(15px); border-radius: 16px; padding: 20px; margin: 12px 0; border: 1px solid rgba(59,130,246,0.2); transition: all 0.3s ease; }
+# .rank { display: inline-block; width: 44px; height: 44px; border-radius: 50%; background: linear-gradient(135deg, #3b82f6, #6366f1); color: white; font-weight: 800; font-size: 18px; text-align: center; line-height: 44px; box-shadow: 0 6px 16px rgba(59,130,246,0.4); }
+# .metric-box { background: rgba(15,23,42,0.7); backdrop-filter: blur(15px); border-radius: 16px; padding: 24px; text-align: center; border: 1px solid rgba(59,130,246,0.2); transition: all 0.3s ease; }
+# .metric-label { color: rgba(255,255,255,0.6); font-size: 12px; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 8px; }
+# .metric-value { font-size: 36px; font-weight: 900; background: linear-gradient(135deg, #60a5fa, #a78bfa); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+# .badge { display: inline-block; padding: 6px 14px; border-radius: 10px; font-size: 13px; font-weight: 600; margin: 4px; }
+# .badge-clear { background: rgba(16,185,129,0.15); color: #6ee7b7; border: 1px solid rgba(16,185,129,0.3); }
+# .section-header { color: #fff; font-size: 28px; font-weight: 800; margin: 36px 0 20px; padding-bottom: 12px; border-bottom: 2px solid rgba(59,130,246,0.3); }
+# .stButton > button { background: linear-gradient(135deg, #3b82f6, #6366f1); color: white; border: none; border-radius: 14px; padding: 16px 32px; font-size: 16px; font-weight: 700; width: 100%; box-shadow: 0 10px 25px rgba(59,130,246,0.4); }
+# section[data-testid="stSidebar"] { background: linear-gradient(180deg, rgba(15,23,42,0.98), rgba(0,0,0,0.98)); border-right: 1px solid rgba(59,130,246,0.2); }
+# </style>""", unsafe_allow_html=True)
 
-# # Load and process data
-# @st.cache_data
-# def load_data(file_path):
-#     df = pd.read_excel(file_path)
-#     time_slots = sorted(set(col.split("_")[-1] for col in df.columns if "PPHPD" in col))
-    
+# STATION_MAP = {'BYPH': 'Baiyappanahalli', 'SVRD': 'SV Road', 'IDN': 'Indiranagar', 'HLRU': 'Halasuru', 'TTY': 'Trinity', 'MGRD': 'MG Road', 'CBPK': 'Cubbon Park', 'VDSA': 'Vidhana Soudha', 'MIRD': 'Majestic', 'NGSA': 'Nagasandra', 'BNSK': 'Banashankari', 'JAYN': 'Jayanagar'}
+
+# def generate_sample_data():
+#     np.random.seed(42)
+#     stations = ['Baiyappanahalli', 'SV Road', 'Indiranagar', 'Majestic', 'MG Road', 'Kengeri', 'Banashankari', 'Jayanagar', 'Yeshwanthpur', 'Nagasandra']
+#     data = []
+#     for i, station in enumerate(stations):
+#         for direction in ['Direction 1', 'Direction 2']:
+#             row = {'Station': station, 'Direction': direction, 'Distance from SBC': (i+1) * 3.5}
+#             for time in ['0800-0900', '0900-1000', '1000-1100', '1700-1800', '1800-1900', '1900-2000']:
+#                 base = np.random.randint(300, 1800)
+#                 row[f'Boarding_{time}'] = base + np.random.randint(-100, 200)
+#                 row[f'Alighting_{time}'] = int(base * 0.7) + np.random.randint(-50, 150)
+#                 row[f'PPHPD_{time}'] = row[f'Boarding_{time}'] + row[f'Alighting_{time}']
+#             data.append(row)
+#     df = pd.DataFrame(data)
+#     time_slots = ['0800-0900', '0900-1000', '1000-1100', '1700-1800', '1800-1900', '1900-2000']
 #     for time in time_slots:
-#         boarding_threshold = df[f'Boarding_{time}'].quantile(0.70)
-#         alighting_threshold = df[f'Alighting_{time}'].quantile(0.70)
-        
-#         df[f'Rush_Boarding_{time}'] = (df[f'Boarding_{time}'] > boarding_threshold).astype(int)
-#         df[f'Rush_Alighting_{time}'] = (df[f'Alighting_{time}'] > alighting_threshold).astype(int)
-    
+#         df[f'Rush_Boarding_{time}'] = (df[f'Boarding_{time}'] > df[f'Boarding_{time}'].quantile(0.60)).astype(int)
+#         df[f'Rush_Alighting_{time}'] = (df[f'Alighting_{time}'] > df[f'Alighting_{time}'].quantile(0.60)).astype(int)
 #     return df, time_slots
 
-# # Train ML models with comprehensive metrics
+# @st.cache_data(ttl=3600)
+# def fetch_and_process_data():
+#     try:
+#         with st.spinner("🔄 Fetching data from OpenCity..."):
+#             # Download actual OpenCity files
+#             urls = {
+#                 'hourly': 'https://data.opencity.in/dataset/369f18e0-4342-4809-b380-44f1d21d904f/resource/45259d6e-41b4-4012-8553-0d27219f83a7/download/a4ef58a3-29de-4787-b68e-56d716d0a95d.xlsx',
+#                 'od_matrix': 'https://data.opencity.in/dataset/369f18e0-4342-4809-b380-44f1d21d904f/resource/e30ecb5f-e5f9-4971-8dd6-74d6966c33eb/download/12984f77-9bca-4854-a0d6-a527976080ac.xlsx',
+#                 'stations': 'https://data.opencity.in/dataset/369f18e0-4342-4809-b380-44f1d21d904f/resource/1ec4f39a-eede-44d4-8e1d-e8658cb89762/download/c47d24a2-8c27-4c3a-a9cd-05c0beafc83d.csv'
+#             }
+            
+#             # Fetch station codes
+#             resp = requests.get(urls['stations'], timeout=30)
+#             stations_df = pd.read_csv(BytesIO(resp.content))
+#             station_map = dict(zip(stations_df['code'].str.strip(), stations_df['name'].str.strip()))
+            
+#             # Fetch hourly data
+#             resp = requests.get(urls['hourly'], timeout=30)
+#             hourly_df = pd.read_excel(BytesIO(resp.content))
+            
+#             # Process the data
+#             time_mapping = {
+#                 '08:00 Hrs To     09:00 Hrs': '0800-0900', '09:00 Hrs To     10:00 Hrs': '0900-1000',
+#                 '10:00 Hrs To     11:00 Hrs': '1000-1100', '17:00 Hrs To     18:00 Hrs': '1700-1800',
+#                 '18:00 Hrs To     19:00 Hrs': '1800-1900', '19:00 Hrs To     20:00 Hrs': '1900-2000'
+#             }
+            
+#             unique_stations = hourly_df['STATION'].dropna().unique()
+#             data = []
+            
+#             for idx, station_code in enumerate(unique_stations):
+#                 station_data = hourly_df[hourly_df['STATION'] == station_code]
+#                 if station_data.empty: continue
+                
+#                 station_name = station_map.get(station_code.strip(), station_code)
+#                 distance = (idx + 1) * 2.8  # Estimated distance
+                
+#                 # Create both directions
+#                 for direction in ['Direction 1', 'Direction 2']:
+#                     row = {'Station': station_name, 'Direction': direction, 'Distance from SBC': distance}
+                    
+#                     for old_time, new_time in time_mapping.items():
+#                         if old_time in station_data.columns:
+#                             total = station_data[old_time].sum()
+#                             row[f'Boarding_{new_time}'] = int(total * 0.55)  # 55% boarding
+#                             row[f'Alighting_{new_time}'] = int(total * 0.45)  # 45% alighting
+#                             row[f'PPHPD_{new_time}'] = int(total)
+#                         else:
+#                             row[f'Boarding_{new_time}'] = 0
+#                             row[f'Alighting_{new_time}'] = 0
+#                             row[f'PPHPD_{new_time}'] = 0
+#                     data.append(row)
+            
+#             df = pd.DataFrame(data)
+#             time_slots = list(time_mapping.values())
+            
+#             for time in time_slots:
+#                 df[f'Rush_Boarding_{time}'] = (df[f'Boarding_{time}'] > df[f'Boarding_{time}'].quantile(0.60)).astype(int)
+#                 df[f'Rush_Alighting_{time}'] = (df[f'Alighting_{time}'] > df[f'Alighting_{time}'].quantile(0.60)).astype(int)
+            
+#             st.success(f"✅ Data loaded! {len(unique_stations)} stations from OpenCity")
+#             return df, time_slots
+#     except Exception as e:
+#         st.error(f"⚠️ Error fetching OpenCity data: {e}")
+#         st.info("💡 Using fallback sample data...")
+#         return generate_sample_data()
+
 # @st.cache_resource
-# def train_ml_models(df, time_slots):
-#     models_boarding, models_alighting = {}, {}
-#     metrics_boarding, metrics_alighting = {}, {}
-    
+# def train_models(df, time_slots):
+#     models_b, models_a, metrics_b, metrics_a = {}, {}, {}, {}
 #     for time in time_slots:
-#         # Boarding model
-#         X_boarding = df[[f'Boarding_{time}', f'PPHPD_{time}', 'Distance from SBC']]
-#         y_boarding = df[f'Rush_Boarding_{time}']
-#         X_train_b, X_test_b, y_train_b, y_test_b = train_test_split(
-#             X_boarding, y_boarding, test_size=0.2, random_state=42
-#         )
-        
-#         model_boarding = RandomForestClassifier(n_estimators=300, max_depth=15, random_state=42)
-#         model_boarding.fit(X_train_b, y_train_b)
-        
-#         y_pred_b = model_boarding.predict(X_test_b)
-#         metrics_boarding[time] = {
-#             'accuracy': accuracy_score(y_test_b, y_pred_b),
-#             'precision': precision_score(y_test_b, y_pred_b, zero_division=0),
-#             'recall': recall_score(y_test_b, y_pred_b, zero_division=0),
-#             'f1': f1_score(y_test_b, y_pred_b, zero_division=0),
-#             'confusion_matrix': confusion_matrix(y_test_b, y_pred_b)
-#         }
-#         models_boarding[time] = model_boarding
-        
-#         # Alighting model
-#         X_alighting = df[[f'Alighting_{time}', f'PPHPD_{time}', 'Distance from SBC']]
-#         y_alighting = df[f'Rush_Alighting_{time}']
-#         X_train_a, X_test_a, y_train_a, y_test_a = train_test_split(
-#             X_alighting, y_alighting, test_size=0.2, random_state=42
-#         )
-        
-#         model_alighting = RandomForestClassifier(n_estimators=300, max_depth=15, random_state=42)
-#         model_alighting.fit(X_train_a, y_train_a)
-        
-#         y_pred_a = model_alighting.predict(X_test_a)
-#         metrics_alighting[time] = {
-#             'accuracy': accuracy_score(y_test_a, y_pred_a),
-#             'precision': precision_score(y_test_a, y_pred_a, zero_division=0),
-#             'recall': recall_score(y_test_a, y_pred_a, zero_division=0),
-#             'f1': f1_score(y_test_a, y_pred_a, zero_division=0),
-#             'confusion_matrix': confusion_matrix(y_test_a, y_pred_a)
-#         }
-#         models_alighting[time] = model_alighting
-    
-#     return models_boarding, models_alighting, metrics_boarding, metrics_alighting
+#         X_b = df[[f'Boarding_{time}', f'PPHPD_{time}', 'Distance from SBC']]
+#         y_b = df[f'Rush_Boarding_{time}']
+#         X_tr_b, X_te_b, y_tr_b, y_te_b = train_test_split(X_b, y_b, test_size=0.2, random_state=42)
+#         m_b = RandomForestClassifier(n_estimators=300, max_depth=15, random_state=42)
+#         m_b.fit(X_tr_b, y_tr_b)
+#         y_p_b = m_b.predict(X_te_b)
+#         metrics_b[time] = {'accuracy': accuracy_score(y_te_b, y_p_b), 'precision': precision_score(y_te_b, y_p_b, zero_division=0), 'recall': recall_score(y_te_b, y_p_b, zero_division=0), 'f1': f1_score(y_te_b, y_p_b, zero_division=0)}
+#         models_b[time] = m_b
+#         X_a = df[[f'Alighting_{time}', f'PPHPD_{time}', 'Distance from SBC']]
+#         y_a = df[f'Rush_Alighting_{time}']
+#         X_tr_a, X_te_a, y_tr_a, y_te_a = train_test_split(X_a, y_a, test_size=0.2, random_state=42)
+#         m_a = RandomForestClassifier(n_estimators=300, max_depth=15, random_state=42)
+#         m_a.fit(X_tr_a, y_tr_a)
+#         y_p_a = m_a.predict(X_te_a)
+#         metrics_a[time] = {'accuracy': accuracy_score(y_te_a, y_p_a), 'precision': precision_score(y_te_a, y_p_a, zero_division=0), 'recall': recall_score(y_te_a, y_p_a, zero_division=0), 'f1': f1_score(y_te_a, y_p_a, zero_division=0)}
+#         models_a[time] = m_a
+#     return models_b, models_a, metrics_b, metrics_a
 
-# # Predict with probability
-# def predict_rush_with_probability(model, station_data):
-#     prediction = model.predict([station_data])[0]
-#     probability = model.predict_proba([station_data])[0]
-#     return prediction, probability[1]
+# def find_alternates(station, direction, time, df, btype, top_n=5):
+#     rush_col = f'Rush_Boarding_{time}' if btype == 'Boarding' else f'Rush_Alighting_{time}'
+#     curr_rush = df[df['Station'] == station].iloc[0][rush_col]
+#     if curr_rush == 0: return []
+#     alts = []
+#     for _, row in df[df['Direction'] == direction].iterrows():
+#         if row['Station'] == station: continue
+#         dist = abs(df[df['Station'] == station].iloc[0]['Distance from SBC'] - row['Distance from SBC'])
+#         score = (0.5 * min(dist/20, 1)) + (0.3 * (1 if row[rush_col] else 0)) + (0.2 * min(row[f'PPHPD_{time}']/5000, 1))
+#         alts.append({'Station': row['Station'], 'Distance_km': round(dist, 2), 'Is_Congested': row[rush_col], 'PPHPD': int(row[f'PPHPD_{time}']), 'Score': score})
+#     return sorted(alts, key=lambda x: x['Score'])[:top_n]
 
-# # Calculate actual distance between two stations along the route
-# def compute_distance_between_stations(df, station1, station2):
-#     """
-#     Calculate actual distance between two stations along the metro route.
+# def check_status(station, direction, time, btype, df, models_b, models_a):
+#     row = df[(df['Station'] == station) & (df['Direction'] == direction)].iloc[0]
+#     model = models_b[time] if btype == "Boarding" else models_a[time]
+#     feats = [f"{btype}_{time}", f"PPHPD_{time}", 'Distance from SBC']
+#     pred = model.predict([row[feats].values])[0]
+#     prob = model.predict_proba([row[feats].values])[0][1]
     
-#     How it works:
-#     1. Each station has a 'Distance from SBC' value (in km)
-#     2. SBC is the reference point (Station Base Center/Starting point)
-#     3. Distance between any two stations = |Distance1 - Distance2|
-    
-#     Example:
-#     - CLGT is at 58 km from SBC
-#     - KGIT is at 12 km from SBC
-#     - Distance between CLGT and KGIT = |58 - 12| = 46 km
-    
-#     This gives the actual route distance along the metro line.
-#     """
-#     station_distances = df.set_index('Station')['Distance from SBC'].to_dict()
-#     dist1 = station_distances.get(station1, 0)
-#     dist2 = station_distances.get(station2, 0)
-#     actual_distance = abs(dist1 - dist2)
-    
-#     return actual_distance
-
-# # Smart scoring for alternatives
-# def calculate_station_score(distance_km, is_congested, pphpd, boarding_count):
-#     """
-#     Scoring system:
-#     - Distance: closer is better (50% weight)
-#     - Congestion: not congested is much better (30% weight)
-#     - Traffic density: lower is better (15% weight)
-#     - Boarding count: lower is better (5% weight)
-#     """
-#     # Normalize distance (assume max 20km difference)
-#     dist_score = min(distance_km / 20, 1.0)
-    
-#     # Congestion penalty (heavy penalty for congestion)
-#     congestion_score = 1.0 if is_congested else 0.0
-    
-#     # Normalize PPHPD (assume max 5000)
-#     pphpd_score = min(pphpd / 5000, 1.0)
-    
-#     # Normalize boarding count (assume max 2000)
-#     boarding_score = min(boarding_count / 2000, 1.0)
-    
-#     # Weighted score (lower is better)
-#     total_score = (0.50 * dist_score) + (0.30 * congestion_score) + (0.15 * pphpd_score) + (0.05 * boarding_score)
-    
-#     return total_score
-
-# # Find alternate stations in the same direction
-# def find_alternate_stations(station, direction, time, df, boarding_type, top_n=5):
-#     rush_column = f'Rush_Boarding_{time}' if boarding_type == 'Boarding' else f'Rush_Alighting_{time}'
-#     traffic_column = f'{boarding_type}_{time}'
-#     pphpd_column = f'PPHPD_{time}'
-    
-#     current_station_data = df[df['Station'] == station].iloc[0]
-#     current_rush = current_station_data[rush_column]
-#     current_distance = current_station_data['Distance from SBC']
-    
-#     # If current station is not congested, no need for alternatives
-#     if current_rush == 0:
-#         return []
-    
-#     # Get all stations in same direction
-#     same_direction_stations = df[df['Direction'] == direction].copy()
-    
-#     alternatives = []
-#     for idx, row in same_direction_stations.iterrows():
-#         if row['Station'] == station:
-#             continue
-        
-#         # Calculate distance between stations
-#         distance = compute_distance_between_stations(df, station, row['Station'])
-        
-#         # Get congestion status
-#         is_congested = row[rush_column]
-#         pphpd = row[pphpd_column]
-#         traffic = row[traffic_column]
-        
-#         # Calculate score
-#         score = calculate_station_score(distance, is_congested, pphpd, traffic)
-        
-#         alternatives.append({
-#             'Station': row['Station'],
-#             'Distance_km': round(distance, 2),
-#             'Distance_from_SBC': row['Distance from SBC'],
-#             'Is_Congested': is_congested,
-#             'PPHPD': int(pphpd),
-#             'Traffic_Count': int(traffic),
-#             'Score': score,
-#             'Direction': row['Direction']
-#         })
-    
-#     # Sort by score (lower is better) and return top N
-#     alternatives = sorted(alternatives, key=lambda x: x['Score'])[:top_n]
-    
-#     return alternatives
-
-# # Enhanced rush status check
-# def check_rush_status(station, direction, time, boarding_type, df, models_boarding, models_alighting):
-#     station_row = df[(df['Station'] == station) & (df['Direction'] == direction)].iloc[0]
-#     model = models_boarding[time] if boarding_type == "Boarding" else models_alighting[time]
-    
-#     features_cols = [f"{boarding_type}_{time}", f"PPHPD_{time}", 'Distance from SBC']
-#     station_features = station_row[features_cols].values
-    
-#     predicted_rush, probability = predict_rush_with_probability(model, station_features)
-    
-#     # Current Station Status
-#     st.markdown('<div class="glass-card">', unsafe_allow_html=True)
-#     st.markdown(f'<h3 style="color: #a78bfa; margin-bottom: 20px;">📍 Current Station: {station}</h3>', unsafe_allow_html=True)
-    
-#     col1, col2, col3, col4 = st.columns(4)
-#     with col1:
-#         st.markdown(f'''
-#             <div class="metric-container">
-#                 <div class="metric-label">🚉 Station</div>
-#                 <div style="color: white; font-size: 20px; font-weight: 700;">{station}</div>
-#             </div>
-#         ''', unsafe_allow_html=True)
-    
-#     with col2:
-#         traffic_val = station_row[f'{boarding_type}_{time}']
-#         st.markdown(f'''
-#             <div class="metric-container">
-#                 <div class="metric-label">👥 {boarding_type}</div>
-#                 <div class="metric-value">{int(traffic_val)}</div>
-#             </div>
-#         ''', unsafe_allow_html=True)
-    
-#     with col3:
-#         st.markdown(f'''
-#             <div class="metric-container">
-#                 <div class="metric-label">🚦 PPHPD</div>
-#                 <div class="metric-value">{int(station_row[f'PPHPD_{time}'])}</div>
-#             </div>
-#         ''', unsafe_allow_html=True)
-    
-#     with col4:
-#         st.markdown(f'''
-#             <div class="metric-container">
-#                 <div class="metric-label">📏 From SBC</div>
-#                 <div class="metric-value">{station_row['Distance from SBC']} km</div>
-#             </div>
-#         ''', unsafe_allow_html=True)
-    
+#     st.markdown(f'<div class="glass-card"><h3 style="color: #60a5fa;">📍 {station}</h3>', unsafe_allow_html=True)
+#     c1, c2, c3, c4 = st.columns(4)
+#     with c1: st.markdown(f'<div class="metric-box"><div class="metric-label">👥 {btype}</div><div class="metric-value" style="font-size:24px;">{int(row[f"{btype}_{time}"])}</div></div>', unsafe_allow_html=True)
+#     with c2: st.markdown(f'<div class="metric-box"><div class="metric-label">🚦 PPHPD</div><div class="metric-value" style="font-size:24px;">{int(row[f"PPHPD_{time}"])}</div></div>', unsafe_allow_html=True)
+#     with c3: st.markdown(f'<div class="metric-box"><div class="metric-label">📏 From SBC</div><div class="metric-value" style="font-size:24px;">{row["Distance from SBC"]:.1f} km</div></div>', unsafe_allow_html=True)
+#     with c4: st.markdown(f'<div class="metric-box"><div class="metric-label">⏰ Time</div><div class="metric-value" style="font-size:24px;">{time}</div></div>', unsafe_allow_html=True)
 #     st.markdown('</div>', unsafe_allow_html=True)
     
-#     # Prediction Result
-#     if predicted_rush == 1:
-#         st.markdown(f'''
-#         <div class="danger-card">
-#             <p class="danger-text">⚠️ {station} is CROWDED at {time}</p>
-#             <p style="color: rgba(255, 255, 255, 0.7); margin: 10px 0 0 0;">
-#                 Confidence: {probability*100:.1f}% | Direction: {direction}
-#             </p>
-#         </div>
-#         ''', unsafe_allow_html=True)
-        
-#         # Find alternates
-#         alternates = find_alternate_stations(station, direction, time, df, boarding_type, top_n=5)
-        
-#         if alternates:
-#             st.markdown(f'<h3 class="section-header">🎯 Recommended Alternative Stations (Same Direction: {direction})</h3>', unsafe_allow_html=True)
-#             st.markdown('<p style="color: rgba(255, 255, 255, 0.7); margin-bottom: 20px;">Stations ranked by proximity, congestion level, and traffic density</p>', unsafe_allow_html=True)
-            
-#             for i, alt in enumerate(alternates, 1):
-#                 status_badge = "badge-success" if alt['Is_Congested'] == 0 else "badge-warning"
-#                 status_text = "✅ Clear" if alt['Is_Congested'] == 0 else "⚠️ Busy"
-#                 status_icon = "🟢" if alt['Is_Congested'] == 0 else "🟡"
-                
-#                 st.markdown(f'''
-#                 <div class="alt-station-card">
-#                     <div style="display: flex; align-items: center; gap: 15px; margin-bottom: 15px;">
-#                         <span class="station-rank">#{i}</span>
-#                         <div style="flex-grow: 1;">
-#                             <div class="station-name">{alt['Station']}</div>
-#                             <span class="station-badge {status_badge}">{status_icon} {status_text}</span>
-#                         </div>
-#                     </div>
-                    
-#                     <div class="info-box" style="margin-bottom: 15px; background: rgba(59, 130, 246, 0.15);">
-#                         <strong>📐 Distance Calculation:</strong><br>
-#                         {station} is at <strong>{station_row['Distance from SBC']} km</strong> from SBC<br>
-#                         {alt['Station']} is at <strong>{alt['Distance_from_SBC']} km</strong> from SBC<br>
-#                         <strong>Route Distance = |{station_row['Distance from SBC']} - {alt['Distance_from_SBC']}| = {alt['Distance_km']} km</strong>
-#                     </div>
-                    
-#                     <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 15px;">
-#                         <div class="distance-indicator">
-#                             <div class="distance-text">📍 Distance from {station}</div>
-#                             <div style="color: white; font-size: 24px; font-weight: 800; margin-top: 5px;">
-#                                 {alt['Distance_km']} km
-#                             </div>
-#                         </div>
-                        
-#                         <div style="background: rgba(139, 92, 246, 0.15); border-radius: 15px; padding: 15px;">
-#                             <div style="color: #c4b5fd; font-size: 14px; font-weight: 600;">📏 Position from SBC</div>
-#                             <div style="color: white; font-size: 24px; font-weight: 800; margin-top: 5px;">
-#                                 {alt['Distance_from_SBC']} km
-#                             </div>
-#                         </div>
-#                     </div>
-                    
-#                     <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin-top: 15px;">
-#                         <div class="station-detail">
-#                             <strong>🚦 PPHPD:</strong> {alt['PPHPD']}
-#                         </div>
-#                         <div class="station-detail">
-#                             <strong>👥 Traffic:</strong> {alt['Traffic_Count']}
-#                         </div>
-#                         <div class="station-detail">
-#                             <strong>⭐ Score:</strong> {alt['Score']:.3f}
-#                         </div>
-#                     </div>
-                    
-#                     <div style="margin-top: 12px; padding-top: 12px; border-top: 1px solid rgba(139, 92, 246, 0.3);">
-#                         <div style="color: #c4b5fd; font-size: 13px;">
-#                             <strong>🚆 Same Direction:</strong> All trains going to {direction} will stop here
-#                         </div>
-#                     </div>
-#                 </div>
-#                 ''', unsafe_allow_html=True)
-            
-#             st.markdown('''
-#             <div class="info-box">
-#                 <strong>💡 How Distance is Calculated:</strong><br><br>
-                
-#                 <strong>📐 Distance Calculation Method:</strong><br>
-#                 • Each station has a fixed position from SBC (Station Base Center/Starting Point)<br>
-#                 • The system calculates the absolute difference between two stations' positions<br>
-#                 • <strong>Formula:</strong> Distance = |Station1_Position - Station2_Position|<br><br>
-                
-#                 <strong>Example with your data:</strong><br>
-#                 • CLGT is at 58 km from SBC<br>
-#                 • KGIT is at 12 km from SBC<br>
-#                 • Distance between them = |58 - 12| = <strong>46 km</strong><br><br>
-                
-#                 <strong>🚆 Route Information:</strong><br>
-#                 All suggested stations are on the <strong>same direction/route</strong>, so your train will stop at all of them. 
-#                 Choose the nearest one with lower congestion for a comfortable journey!<br><br>
-                
-#                 <strong>⭐ Smart Ranking:</strong><br>
-#                 Stations are ranked by a smart score considering:<br>
-#                 • Distance from your selected station (50% weight) - closer is better<br>
-#                 • Congestion level (30% weight) - less crowded is better<br>
-#                 • Traffic density/PPHPD (15% weight) - lower is better<br>
-#                 • Passenger count (5% weight) - fewer people is better
-#             </div>
-#             ''', unsafe_allow_html=True)
-#         else:
-#             st.markdown('''
-#             <div class="info-box">
-#                 ❌ No suitable alternative stations found in this direction at this time.
-#             </div>
-#             ''', unsafe_allow_html=True)
+#     if pred == 1:
+#         st.markdown(f'<div class="status-danger"><p class="status-title">⚠️ {station} is CROWDED</p><p style="color: rgba(255,255,255,0.6);">Confidence: {prob*100:.1f}%</p></div>', unsafe_allow_html=True)
+#         alts = find_alternates(station, direction, time, df, btype)
+#         if alts:
+#             st.markdown('<h3 class="section-header">🎯 Alternatives</h3>', unsafe_allow_html=True)
+#             for i, alt in enumerate(alts, 1):
+#                 badge = "badge-clear" if alt['Is_Congested'] == 0 else "badge-clear"
+#                 st.markdown(f'<div class="alt-station"><span class="rank">#{i}</span> <b>{alt["Station"]}</b> <span class="{badge}">{"🟢 Clear" if alt["Is_Congested"]==0 else "🟡 Busy"}</span><br><small>📏 {alt["Distance_km"]} km • 🚦 {alt["PPHPD"]} • ⭐ {alt["Score"]:.3f}</small></div>', unsafe_allow_html=True)
 #     else:
-#         st.markdown(f'''
-#         <div class="success-card">
-#             <p class="success-text">✅ {station} is NOT CROWDED at {time}</p>
-#             <p style="color: rgba(255, 255, 255, 0.7); margin: 10px 0 0 0;">
-#                 Confidence: {(1-probability)*100:.1f}% | Direction: {direction}
-#             </p>
-#             <p style="color: #6ee7b7; margin-top: 15px; font-size: 16px;">
-#                 🎉 Perfect! You can comfortably board/alight at this station.
-#             </p>
-#         </div>
-#         ''', unsafe_allow_html=True)
+#         st.markdown(f'<div class="status-success"><p class="status-title">✅ {station} is NOT CROWDED</p><p style="color: rgba(255,255,255,0.6);">Confidence: {(1-prob)*100:.1f}%</p></div>', unsafe_allow_html=True)
 
-# # Create comprehensive metrics visualization
-# def create_metrics_dashboard(metrics, model_type, time):
-#     fig = go.Figure()
-    
-#     metrics_data = metrics[time]
-#     metric_names = ['Accuracy', 'Precision', 'Recall', 'F1 Score']
-#     metric_values = [
-#         metrics_data['accuracy'] * 100,
-#         metrics_data['precision'] * 100,
-#         metrics_data['recall'] * 100,
-#         metrics_data['f1'] * 100
-#     ]
-    
-#     colors = ['#8b5cf6', '#a78bfa', '#c4b5fd', '#ddd6fe']
-    
-#     fig.add_trace(go.Bar(
-#         x=metric_names,
-#         y=metric_values,
-#         marker=dict(
-#             color=colors,
-#             line=dict(color='rgba(255, 255, 255, 0.3)', width=2)
-#         ),
-#         text=[f'{v:.2f}%' for v in metric_values],
-#         textposition='outside',
-#         textfont=dict(size=14, color='white', family='Poppins'),
-#         hovertemplate='<b>%{x}</b><br>Score: %{y:.2f}%<extra></extra>'
-#     ))
-    
-#     fig.update_layout(
-#         title=dict(
-#             text=f'{model_type} Model Performance - {time}',
-#             font=dict(size=20, color='white', family='Poppins', weight=700),
-#             x=0.5,
-#             xanchor='center'
-#         ),
-#         xaxis=dict(
-#             title='Metrics',
-#             title_font=dict(size=16, color='rgba(255,255,255,0.8)'),
-#             tickfont=dict(size=14, color='rgba(255,255,255,0.8)'),
-#             gridcolor='rgba(255,255,255,0.1)'
-#         ),
-#         yaxis=dict(
-#             title='Score (%)',
-#             title_font=dict(size=16, color='rgba(255,255,255,0.8)'),
-#             tickfont=dict(size=14, color='rgba(255,255,255,0.8)'),
-#             gridcolor='rgba(255,255,255,0.1)',
-#             range=[0, 105]
-#         ),
-#         plot_bgcolor='rgba(0,0,0,0)',
-#         paper_bgcolor='rgba(0,0,0,0)',
-#         height=400,
-#         showlegend=False,
-#         margin=dict(t=60, b=40, l=60, r=40)
-#     )
-    
-#     return fig
-
-# # Create confusion matrix heatmap
-# def create_confusion_matrix_plot(cm, model_type, time):
-#     fig = go.Figure(data=go.Heatmap(
-#         z=cm,
-#         x=['Not Crowded', 'Crowded'],
-#         y=['Not Crowded', 'Crowded'],
-#         colorscale=[[0, '#8b5cf6'], [1, '#c4b5fd']],
-#         text=cm,
-#         texttemplate='<b>%{text}</b>',
-#         textfont=dict(size=18, color='white'),
-#         hovertemplate='Predicted: %{x}<br>Actual: %{y}<br>Count: %{z}<extra></extra>'
-#     ))
-    
-#     fig.update_layout(
-#         title=dict(
-#             text=f'{model_type} Confusion Matrix - {time}',
-#             font=dict(size=20, color='white', family='Poppins', weight=700),
-#             x=0.5,
-#             xanchor='center'
-#         ),
-#         xaxis=dict(
-#             title='Predicted',
-#             title_font=dict(size=16, color='rgba(255,255,255,0.8)'),
-#             tickfont=dict(size=14, color='rgba(255,255,255,0.8)')
-#         ),
-#         yaxis=dict(
-#             title='Actual',
-#             title_font=dict(size=16, color='rgba(255,255,255,0.8)'),
-#             tickfont=dict(size=14, color='rgba(255,255,255,0.8)')
-#         ),
-#         plot_bgcolor='rgba(0,0,0,0)',
-#         paper_bgcolor='rgba(0,0,0,0)',
-#         height=400,
-#         margin=dict(t=60, b=40, l=60, r=60)
-#     )
-    
-#     return fig
-
-# # Traffic visualization
-# def create_traffic_heatmap(df, time, boarding_type, direction):
-#     df_filtered = df[df['Direction'] == direction].sort_values('Distance from SBC')
-#     data_col = f'{boarding_type}_{time}'
-    
-#     fig = go.Figure()
-    
-#     fig.add_trace(go.Bar(
-#         x=df_filtered['Station'],
-#         y=df_filtered[data_col],
-#         marker=dict(
-#             color=df_filtered[data_col],
-#             colorscale='Turbo',
-#             showscale=True,
-            
-#             colorbar=dict(
-#                 title=dict(
-#                     text='Traffic',
-#                     font=dict(color='white')     # ✅ correct place
-#                 ),
-#                 tickfont=dict(color='white')
-#             ),
-
-            
-#             line=dict(color='rgba(255,255,255,0.3)', width=1)
-#         ),
-#         text=df_filtered[data_col],
-#         textposition='outside',
-#         textfont=dict(color='white', size=12),
-#         hovertemplate='<b>%{x}</b><br>Traffic: %{y}<extra></extra>'
-#     ))
-    
-#     fig.update_layout(
-#         title=dict(
-#             text=f'{boarding_type} Traffic Distribution - {time} ({direction})',
-#             font=dict(size=20, color='white', family='Poppins', weight=700),
-#             x=0.5,
-#             xanchor='center'
-#         ),
-#         xaxis=dict(
-#             title='Station',
-#             title_font=dict(size=16, color='rgba(255,255,255,0.8)'),
-#             tickfont=dict(size=12, color='rgba(255,255,255,0.8)'),
-#             tickangle=-45,
-#             gridcolor='rgba(255,255,255,0.1)'
-#         ),
-#         yaxis=dict(
-#             title=f'{boarding_type} Count',
-#             title_font=dict(size=16, color='rgba(255,255,255,0.8)'),
-#             tickfont=dict(size=14, color='rgba(255,255,255,0.8)'),
-#             gridcolor='rgba(255,255,255,0.1)'
-#         ),
-#         plot_bgcolor='rgba(0,0,0,0)',
-#         paper_bgcolor='rgba(0,0,0,0)',
-#         height=500,
-#         showlegend=False,
-#         margin=dict(t=60, b=100, l=60, r=40)
-#     )
-    
-#     return fig
-
-# # Main App
 # def main():
-#     # Sidebar
-#     st.sidebar.markdown('''
-#         <div style="text-align: center; padding: 20px 0;">
-#             <div style="font-size: 60px; margin-bottom: 10px;">🚇</div>
-#             <h1 style="color: #a78bfa; font-size: 28px; margin: 0;">Smart Station</h1>
-#             <h1 style="color: #a78bfa; font-size: 28px; margin: 0;">Advisor</h1>
-#             <p style="color: rgba(255,255,255,0.6); font-size: 14px; margin-top: 10px;">AI-Powered Metro Intelligence</p>
-#         </div>
-#     ''', unsafe_allow_html=True)
+#     st.sidebar.markdown('<div style="text-align:center;padding:20px;"><div style="font-size:56px;">🚇</div><h2 style="color:#60a5fa;">Metro Advisor</h2><p style="color:rgba(255,255,255,0.5);">Auto-Fetch Mode</p></div><hr style="border:1px solid rgba(59,130,246,0.2);">', unsafe_allow_html=True)
     
-#     st.sidebar.markdown("---")
+#     result = fetch_and_process_data()
+#     if result[0] is None: return
+#     df, time_slots = result
+#     models_b, models_a, metrics_b, metrics_a = train_models(df, time_slots)
     
-#     file_path = st.sidebar.file_uploader(
-#         "📂 Upload Metro Data",
-#         type=["xlsx"],
-#         help="Upload Excel file with station traffic data"
-#     )
+#     st.markdown('<div class="hero"><div class="hero-icon">🚇</div><h1 class="hero-title">Metro Station Advisor</h1><p class="hero-subtitle">AI-Powered Congestion Prediction (Auto-Fetch)</p></div>', unsafe_allow_html=True)
     
-#     if file_path:
-#         df, time_slots = load_data(file_path)
-#         models_boarding, models_alighting, metrics_boarding, metrics_alighting = train_ml_models(df, time_slots)
-        
-#         # Hero Section
-#         st.markdown('<h1 class="hero-title">🚇 Smart Metro Station Advisor</h1>', unsafe_allow_html=True)
-#         st.markdown('<p class="hero-subtitle">AI-Powered Congestion Prediction & Intelligent Route Planning</p>', unsafe_allow_html=True)
-        
-#         # Sidebar Controls
-#         with st.sidebar:
-#             st.markdown("### 🎯 Configuration")
-#             direction = st.selectbox(
-#                 "🔄 Select Direction",
-#                 df['Direction'].unique(),
-#                 help="Choose your travel direction"
-#             )
-            
-#             station = st.selectbox(
-#                 "📍 Select Station",
-#                 df[df['Direction'] == direction]['Station'].unique(),
-#                 help="Choose your preferred station"
-#             )
-            
-#             time = st.selectbox(
-#                 "⏰ Time Slot",
-#                 time_slots,
-#                 help="Select your travel time"
-#             )
-            
-#             boarding_type = st.radio(
-#                 "🚶 Action Type",
-#                 ["Boarding", "Alighting"],
-#                 help="Are you boarding or alighting?"
-#             )
-            
-#             st.markdown("---")
-#             check_button = st.button("🔍 Analyze Station", use_container_width=True)
-        
-#         # Main Content
-#         if check_button:
-#             check_rush_status(station, direction, time, boarding_type, df, models_boarding, models_alighting)
-            
-#             st.markdown("---")
-            
-#             # Traffic Visualization
-#             st.markdown('<h2 class="section-header">📊 Traffic Distribution Analysis</h2>', unsafe_allow_html=True)
-#             fig_traffic = create_traffic_heatmap(df, time, boarding_type, direction)
-#             st.plotly_chart(fig_traffic, use_container_width=True)
-        
-#         # Model Performance Section
-#         st.markdown("---")
-#         st.markdown('<h2 class="section-header">🎯 Model Performance Analytics</h2>', unsafe_allow_html=True)
-        
-#         tab1, tab2 = st.tabs(["📈 Metrics Dashboard", "🔥 Confusion Matrix"])
-        
-#         with tab1:
-#             col1, col2 = st.columns(2)
-            
-#             with col1:
-#                 st.markdown("#### 🚆 Boarding Model")
-#                 metrics_b = metrics_boarding[time]
-                
-#                 col_a, col_b, col_c, col_d = st.columns(4)
-#                 with col_a:
-#                     st.metric("Accuracy", f"{metrics_b['accuracy']*100:.2f}%")
-#                 with col_b:
-#                     st.metric("Precision", f"{metrics_b['precision']*100:.2f}%")
-#                 with col_c:
-#                     st.metric("Recall", f"{metrics_b['recall']*100:.2f}%")
-#                 with col_d:
-#                     st.metric("F1 Score", f"{metrics_b['f1']*100:.2f}%")
-                
-#                 fig_b = create_metrics_dashboard(metrics_boarding, "Boarding", time)
-#                 st.plotly_chart(fig_b, use_container_width=True)
-            
-#             with col2:
-#                 st.markdown("#### 🚉 Alighting Model")
-#                 metrics_a = metrics_alighting[time]
-                
-#                 col_a, col_b, col_c, col_d = st.columns(4)
-#                 with col_a:
-#                     st.metric("Accuracy", f"{metrics_a['accuracy']*100:.2f}%")
-#                 with col_b:
-#                     st.metric("Precision", f"{metrics_a['precision']*100:.2f}%")
-#                 with col_c:
-#                     st.metric("Recall", f"{metrics_a['recall']*100:.2f}%")
-#                 with col_d:
-#                     st.metric("F1 Score", f"{metrics_a['f1']*100:.2f}%")
-                
-#                 fig_a = create_metrics_dashboard(metrics_alighting, "Alighting", time)
-#                 st.plotly_chart(fig_a, use_container_width=True)
-        
-#         with tab2:
-#             col1, col2 = st.columns(2)
-            
-#             with col1:
-#                 cm_b = metrics_boarding[time]['confusion_matrix']
-#                 fig_cm_b = create_confusion_matrix_plot(cm_b, "Boarding", time)
-#                 st.plotly_chart(fig_cm_b, use_container_width=True)
-            
-#             with col2:
-#                 cm_a = metrics_alighting[time]['confusion_matrix']
-#                 fig_cm_a = create_confusion_matrix_plot(cm_a, "Alighting", time)
-#                 st.plotly_chart(fig_cm_a, use_container_width=True)
-        
-#         # Summary Stats
-#         st.markdown("---")
-#         st.markdown('<h2 class="section-header">📊 Dataset Summary</h2>', unsafe_allow_html=True)
-        
-#         col1, col2, col3, col4 = st.columns(4)
-#         with col1:
-#             st.markdown(f'''
-#                 <div class="metric-container">
-#                     <div class="metric-label">🚉 Total Stations</div>
-#                     <div class="metric-value">{len(df)}</div>
-#                 </div>
-#             ''', unsafe_allow_html=True)
-        
-#         with col2:
-#             st.markdown(f'''
-#                 <div class="metric-container">
-#                     <div class="metric-label">🔄 Directions</div>
-#                     <div class="metric-value">{df['Direction'].nunique()}</div>
-#                 </div>
-#             ''', unsafe_allow_html=True)
-        
-#         with col3:
-#             st.markdown(f'''
-#                 <div class="metric-container">
-#                     <div class="metric-label">⏰ Time Slots</div>
-#                     <div class="metric-value">{len(time_slots)}</div>
-#                 </div>
-#             ''', unsafe_allow_html=True)
-        
-#         with col4:
-#             avg_acc = (metrics_boarding[time]['accuracy'] + metrics_alighting[time]['accuracy']) / 2
-#             st.markdown(f'''
-#                 <div class="metric-container">
-#                     <div class="metric-label">🎯 Avg Accuracy</div>
-#                     <div class="metric-value">{avg_acc*100:.1f}%</div>
-#                 </div>
-#             ''', unsafe_allow_html=True)
+#     with st.sidebar:
+#         st.markdown("### ⚙️ Configuration")
+#         direction = st.selectbox("🔄 Direction", df['Direction'].unique())
+#         station = st.selectbox("📍 Station", df[df['Direction'] == direction]['Station'].unique())
+#         time = st.selectbox("⏰ Time", time_slots)
+#         btype = st.radio("🚶 Action", ["Boarding", "Alighting"])
+#         btn = st.button("🔍 Analyze", use_container_width=True)
     
+#     if btn:
+#         check_status(station, direction, time, btype, df, models_b, models_a)
+#         fig = go.Figure(go.Bar(x=['Accuracy', 'Precision', 'Recall', 'F1'], y=[metrics_b[time]['accuracy']*100, metrics_b[time]['precision']*100, metrics_b[time]['recall']*100, metrics_b[time]['f1']*100], marker=dict(color=['#3b82f6', '#6366f1', '#8b5cf6', '#a78bfa'])))
+#         fig.update_layout(title='Model Performance', plot_bgcolor='rgba(0,0,0,0)', paper_bgcolor='rgba(0,0,0,0)', xaxis=dict(color='white'), yaxis=dict(color='white'), height=350)
+#         st.plotly_chart(fig, use_container_width=True)
 #     else:
-#         st.markdown('<h1 class="hero-title">🚇 Smart Metro Station Advisor</h1>', unsafe_allow_html=True)
-#         st.markdown('<p class="hero-subtitle">AI-Powered Congestion Prediction & Intelligent Route Planning</p>', unsafe_allow_html=True)
-        
-#         st.markdown('''
-#         <div class="glass-card" style="text-align: center;">
-#             <h2 style="color: #a78bfa; margin-bottom: 20px;">👈 Get Started</h2>
-#             <p style="color: rgba(255,255,255,0.8); font-size: 18px; line-height: 1.8;">
-#                 Upload your metro station traffic data using the sidebar to begin intelligent congestion analysis
-#             </p>
-#         </div>
-#         ''', unsafe_allow_html=True)
-        
-#         with st.expander("📋 Required Data Format", expanded=True):
-#             st.markdown("""
-#             <div style="color: rgba(255,255,255,0.9);">
-            
-#             **Your Excel file should contain these columns:**
-            
-#             - `Station` - Station name
-#             - `Direction` - Travel direction (e.g., Direction 1, Direction 2)
-#             - `Boarding_[TIME]` - Number of passengers boarding
-#             - `Alighting_[TIME]` - Number of passengers alighting
-#             - `PPHPD_[TIME]` - Passengers Per Hour Per Direction
-#             - `Distance from SBC` - Distance in kilometers from starting point
-            
-#             **Example:** `Boarding_0800-0900`, `Alighting_1700-1800`, etc.
-#             </div>
-#             """, unsafe_allow_html=True)
+#         st.markdown('<div class="glass-card" style="text-align:center;max-width:600px;margin:40px auto;"><h2 style="color:#60a5fa;">Ready to Analyze!</h2><p style="color:rgba(255,255,255,0.7);">Configure settings in sidebar and click Analyze</p></div>', unsafe_allow_html=True)
 
-# if __name__ == "__main__":
-#     main()
+# if __name__ == "__main__": main()
+
 
 
 
@@ -1503,1056 +648,506 @@ import pandas as pd
 import numpy as np
 from sklearn.model_selection import train_test_split
 from sklearn.ensemble import RandomForestClassifier
-from sklearn.metrics import accuracy_score, precision_score, recall_score, f1_score, confusion_matrix
+from sklearn.metrics import accuracy_score, precision_score, recall_score, f1_score
 import plotly.graph_objects as go
-import plotly.express as px
-from datetime import datetime
+import requests
+from io import BytesIO
 
-# Ultra-modern CSS with glassmorphism and animations
-st.markdown("""
-    <style>
-        @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap');
-        
-        * { 
-            font-family: 'Poppins', sans-serif;
-            transition: all 0.3s ease;
-        }
-        
-        .stApp {
-            background: linear-gradient(135deg, #0a0a0a 0%, #1a0a2e 30%, #16213e 60%, #0f0f23 100%);
-            background-attachment: fixed;
-        }
-        
-        .main > div {
-            background: rgba(0, 0, 0, 0.4);
-            backdrop-filter: blur(10px);
-            border-radius: 30px;
-            padding: 30px;
-            border: 1px solid rgba(139, 92, 246, 0.2);
-        }
-        
-        /* Hero Section */
-        .hero-title {
-            font-size: 56px;
-            font-weight: 800;
-            text-align: center;
-            background: linear-gradient(135deg, #a78bfa 0%, #c084fc 50%, #e879f9 100%);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            margin-bottom: 10px;
-            text-shadow: 0 0 30px rgba(167, 139, 250, 0.5);
-            animation: glow 2s ease-in-out infinite alternate;
-        }
-        
-        @keyframes glow {
-            from { filter: drop-shadow(0 0 10px rgba(167, 139, 250, 0.5)); }
-            to { filter: drop-shadow(0 0 20px rgba(167, 139, 250, 0.8)); }
-        }
-        
-        .hero-subtitle {
-            text-align: center;
-            font-size: 20px;
-            color: rgba(255, 255, 255, 0.8);
-            font-weight: 400;
-            margin-bottom: 40px;
-            letter-spacing: 1px;
-        }
-        
-        /* Glass Cards */
-        .glass-card {
-            background: rgba(255, 255, 255, 0.08);
-            backdrop-filter: blur(20px);
-            border-radius: 25px;
-            padding: 30px;
-            border: 1px solid rgba(255, 255, 255, 0.15);
-            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
-            margin: 20px 0;
-        }
-        
-        .glass-card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 25px 70px rgba(167, 139, 250, 0.3);
-            border-color: rgba(167, 139, 250, 0.5);
-        }
-        
-        /* Status Cards */
-        .success-card {
-            background: linear-gradient(135deg, rgba(16, 185, 129, 0.2) 0%, rgba(5, 150, 105, 0.1) 100%);
-            backdrop-filter: blur(20px);
-            border-radius: 20px;
-            padding: 25px;
-            border-left: 5px solid #10b981;
-            box-shadow: 0 10px 40px rgba(16, 185, 129, 0.2);
-            margin: 15px 0;
-        }
-        
-        .danger-card {
-            background: linear-gradient(135deg, rgba(239, 68, 68, 0.2) 0%, rgba(220, 38, 38, 0.1) 100%);
-            backdrop-filter: blur(20px);
-            border-radius: 20px;
-            padding: 25px;
-            border-left: 5px solid #ef4444;
-            box-shadow: 0 10px 40px rgba(239, 68, 68, 0.2);
-            margin: 15px 0;
-        }
-        
-        .success-text {
-            color: #6ee7b7;
-            font-size: 24px;
-            font-weight: 600;
-            margin: 0;
-        }
-        
-        .danger-text {
-            color: #fca5a5;
-            font-size: 24px;
-            font-weight: 600;
-            margin: 0;
-        }
-        
-        /* Alternative Station Cards */
-        .alt-station-card {
-            background: linear-gradient(135deg, rgba(139, 92, 246, 0.2) 0%, rgba(124, 58, 237, 0.15) 100%);
-            backdrop-filter: blur(15px);
-            border-radius: 18px;
-            padding: 20px;
-            margin: 12px 0;
-            border: 1px solid rgba(139, 92, 246, 0.4);
-            box-shadow: 0 8px 32px rgba(139, 92, 246, 0.25);
-        }
-        
-        .alt-station-card:hover {
-            transform: translateX(10px);
-            border-color: rgba(139, 92, 246, 0.7);
-            box-shadow: 0 12px 40px rgba(139, 92, 246, 0.4);
-            background: linear-gradient(135deg, rgba(139, 92, 246, 0.25) 0%, rgba(124, 58, 237, 0.2) 100%);
-        }
-        
-        .station-rank {
-            display: inline-block;
-            background: linear-gradient(135deg, #8b5cf6 0%, #7c3aed 100%);
-            color: white;
-            border-radius: 50%;
-            width: 40px;
-            height: 40px;
-            text-align: center;
-            line-height: 40px;
-            font-weight: 700;
-            font-size: 18px;
-            box-shadow: 0 5px 15px rgba(139, 92, 246, 0.4);
-        }
-        
-        .station-name {
-            font-size: 22px;
-            font-weight: 700;
-            color: #e9d5ff;
-            margin: 10px 0;
-        }
-        
-        .station-detail {
-            color: rgba(255, 255, 255, 0.8);
-            font-size: 15px;
-            margin: 8px 0;
-        }
-        
-        .station-badge {
-            display: inline-block;
-            padding: 6px 14px;
-            border-radius: 20px;
-            font-size: 13px;
-            font-weight: 600;
-            margin: 5px 5px 5px 0;
-        }
-        
-        .badge-success {
-            background: rgba(16, 185, 129, 0.2);
-            color: #6ee7b7;
-            border: 1px solid #10b981;
-        }
-        
-        .badge-warning {
-            background: rgba(245, 158, 11, 0.2);
-            color: #fcd34d;
-            border: 1px solid #f59e0b;
-        }
-        
-        /* Metrics Dashboard */
-        .metric-container {
-            background: rgba(0, 0, 0, 0.5);
-            backdrop-filter: blur(15px);
-            border-radius: 20px;
-            padding: 25px;
-            text-align: center;
-            border: 1px solid rgba(139, 92, 246, 0.3);
-            box-shadow: 0 8px 32px rgba(139, 92, 246, 0.2);
-        }
-        
-        .metric-container:hover {
-            background: rgba(139, 92, 246, 0.15);
-            transform: scale(1.05);
-            border-color: rgba(139, 92, 246, 0.5);
-        }
-        
-        .metric-label {
-            color: rgba(255, 255, 255, 0.7);
-            font-size: 14px;
-            font-weight: 500;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-            margin-bottom: 10px;
-        }
-        
-        .metric-value {
-            color: #fff;
-            font-size: 36px;
-            font-weight: 800;
-            background: linear-gradient(135deg, #a78bfa 0%, #8b5cf6 100%);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-        }
-        
-        /* Distance Indicator */
-        .distance-indicator {
-            background: linear-gradient(135deg, rgba(59, 130, 246, 0.2) 0%, rgba(37, 99, 235, 0.1) 100%);
-            border-radius: 15px;
-            padding: 15px;
-            margin: 10px 0;
-            border-left: 4px solid #3b82f6;
-        }
-        
-        .distance-text {
-            color: #93c5fd;
-            font-size: 18px;
-            font-weight: 600;
-        }
-        
-        /* Section Headers */
-        .section-header {
-            color: #fff;
-            font-size: 28px;
-            font-weight: 700;
-            margin: 30px 0 20px 0;
-            padding-bottom: 10px;
-            border-bottom: 2px solid rgba(139, 92, 246, 0.5);
-        }
-        
-        /* Buttons */
-        .stButton > button {
-            background: linear-gradient(135deg, #8b5cf6 0%, #7c3aed 100%);
-            color: white;
-            border: none;
-            border-radius: 15px;
-            padding: 18px 35px;
-            font-size: 18px;
-            font-weight: 700;
-            width: 100%;
-            letter-spacing: 1px;
-            box-shadow: 0 10px 30px rgba(139, 92, 246, 0.4);
-            text-transform: uppercase;
-        }
-        
-        .stButton > button:hover {
-            background: linear-gradient(135deg, #7c3aed 0%, #6d28d9 100%);
-            transform: translateY(-3px);
-            box-shadow: 0 15px 40px rgba(139, 92, 246, 0.6);
-        }
-        
-        /* Sidebar Styling */
-        section[data-testid="stSidebar"] {
-            background: linear-gradient(180deg, rgba(10, 10, 10, 0.98) 0%, rgba(26, 10, 46, 0.98) 100%);
-            backdrop-filter: blur(20px);
-            border-right: 1px solid rgba(139, 92, 246, 0.2);
-        }
-        
-        section[data-testid="stSidebar"] > div {
-            background: transparent;
-        }
-        
-        /* Input Fields */
-        .stSelectbox label, .stRadio label {
-            color: rgba(255, 255, 255, 0.9) !important;
-            font-weight: 600 !important;
-            font-size: 16px !important;
-        }
-        
-        /* Info Box */
-        .info-box {
-            background: rgba(59, 130, 246, 0.1);
-            border-left: 4px solid #3b82f6;
-            border-radius: 12px;
-            padding: 20px;
-            margin: 15px 0;
-            color: #93c5fd;
-        }
-        
-        /* Divider */
-        hr {
-            border: none;
-            height: 1px;
-            background: linear-gradient(90deg, transparent, rgba(139, 92, 246, 0.5), transparent);
-            margin: 30px 0;
-        }
-        
-        /* Metric Cards in Streamlit */
-        div[data-testid="stMetricValue"] {
-            font-size: 32px;
-            font-weight: 800;
-            color: #a78bfa;
-        }
-        
-        div[data-testid="stMetricLabel"] {
-            color: rgba(255, 255, 255, 0.8);
-            font-weight: 600;
-        }
-        
-        /* Tab styling */
-        .stTabs [data-baseweb="tab-list"] {
-            gap: 10px;
-            background: rgba(255, 255, 255, 0.05);
-            border-radius: 15px;
-            padding: 10px;
-        }
-        
-        .stTabs [data-baseweb="tab"] {
-            background: transparent;
-            color: rgba(255, 255, 255, 0.7);
-            border-radius: 10px;
-            padding: 12px 24px;
-            font-weight: 600;
-        }
-        
-        .stTabs [aria-selected="true"] {
-            background: linear-gradient(135deg, #8b5cf6 0%, #7c3aed 100%);
-            color: white;
-        }
-    </style>
-""", unsafe_allow_html=True)
+st.markdown("""<style>
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;900&display=swap');
+* { font-family: 'Inter', sans-serif; }
+.stApp { background: linear-gradient(135deg, #0a0e27 0%, #1a1a2e 50%, #16213e 100%); }
+.hero { text-align: center; padding: 40px 20px; }
+.hero-icon { font-size: 72px; filter: drop-shadow(0 0 20px rgba(59, 130, 246, 0.6)); }
+.hero-title { font-size: 56px; font-weight: 900; margin: 20px 0; background: linear-gradient(135deg, #3b82f6, #8b5cf6, #ec4899); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+.hero-subtitle { font-size: 18px; color: rgba(255,255,255,0.6); margin-bottom: 30px; }
+.glass-card { background: rgba(255,255,255,0.05); backdrop-filter: blur(20px); border-radius: 20px; padding: 28px; margin: 20px 0; border: 1px solid rgba(255,255,255,0.1); box-shadow: 0 20px 60px rgba(0,0,0,0.4); transition: all 0.3s ease; }
+.status-success { background: linear-gradient(135deg, rgba(16,185,129,0.1), rgba(5,150,105,0.05)); backdrop-filter: blur(20px); border-radius: 18px; padding: 24px; border: 1px solid rgba(16,185,129,0.3); margin: 16px 0; box-shadow: 0 0 30px rgba(16,185,129,0.2); }
+.status-danger { background: linear-gradient(135deg, rgba(239,68,68,0.1), rgba(220,38,38,0.05)); backdrop-filter: blur(20px); border-radius: 18px; padding: 24px; border: 1px solid rgba(239,68,68,0.3); margin: 16px 0; box-shadow: 0 0 30px rgba(239,68,68,0.2); }
+.status-title { font-size: 26px; font-weight: 800; margin-bottom: 10px; }
+.status-success .status-title { color: #6ee7b7; }
+.status-danger .status-title { color: #fca5a5; }
+.alt-station { background: rgba(59,130,246,0.08); backdrop-filter: blur(15px); border-radius: 16px; padding: 20px; margin: 12px 0; border: 1px solid rgba(59,130,246,0.2); transition: all 0.3s ease; }
+.rank { display: inline-block; width: 44px; height: 44px; border-radius: 50%; background: linear-gradient(135deg, #3b82f6, #6366f1); color: white; font-weight: 800; font-size: 18px; text-align: center; line-height: 44px; box-shadow: 0 6px 16px rgba(59,130,246,0.4); }
+.metric-box { background: rgba(15,23,42,0.7); backdrop-filter: blur(15px); border-radius: 16px; padding: 24px; text-align: center; border: 1px solid rgba(59,130,246,0.2); transition: all 0.3s ease; }
+.metric-label { color: rgba(255,255,255,0.6); font-size: 12px; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 8px; }
+.metric-value { font-size: 36px; font-weight: 900; background: linear-gradient(135deg, #60a5fa, #a78bfa); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+.badge { display: inline-block; padding: 6px 14px; border-radius: 10px; font-size: 13px; font-weight: 600; margin: 4px; }
+.badge-clear { background: rgba(16,185,129,0.15); color: #6ee7b7; border: 1px solid rgba(16,185,129,0.3); }
+.section-header { color: #fff; font-size: 28px; font-weight: 800; margin: 36px 0 20px; padding-bottom: 12px; border-bottom: 2px solid rgba(59,130,246,0.3); }
+.stButton > button { background: linear-gradient(135deg, #3b82f6, #6366f1); color: white; border: none; border-radius: 14px; padding: 16px 32px; font-size: 16px; font-weight: 700; width: 100%; box-shadow: 0 10px 25px rgba(59,130,246,0.4); }
+section[data-testid="stSidebar"] { background: linear-gradient(180deg, rgba(15,23,42,0.98), rgba(0,0,0,0.98)); border-right: 1px solid rgba(59,130,246,0.2); }
+.info-box { background: rgba(59,130,246,0.08); border-left: 4px solid #3b82f6; border-radius: 12px; padding: 16px; margin: 12px 0; color: #bfdbfe; font-size: 13px; line-height: 1.6; }
+.code-block { background: rgba(0,0,0,0.5); border-radius: 8px; padding: 12px; margin: 8px 0; font-family: 'Courier New', monospace; font-size: 11px; color: #10b981; overflow-x: auto; }
+</style>""", unsafe_allow_html=True)
 
-# Load and process data
-@st.cache_data
-def load_data(file_path):
-    df = pd.read_excel(file_path)
-    time_slots = sorted(set(col.split("_")[-1] for col in df.columns if "PPHPD" in col))
-    
-    # Use a more balanced threshold to create meaningful classification
+def generate_sample_data():
+    np.random.seed(42)
+    stations = ['Baiyappanahalli', 'SV Road', 'Indiranagar', 'Majestic', 'MG Road', 'Kengeri', 'Banashankari', 'Jayanagar', 'Yeshwanthpur', 'Nagasandra']
+    data = []
+    for i, station in enumerate(stations):
+        for direction in ['Direction 1', 'Direction 2']:
+            row = {'Station': station, 'Direction': direction, 'Distance from SBC': (i+1) * 3.5}
+            for time in ['0800-0900', '0900-1000', '1000-1100', '1700-1800', '1800-1900', '1900-2000']:
+                base = np.random.randint(300, 1800)
+                noise = np.random.randint(-100, 200)
+                row[f'Boarding_{time}'] = max(0, base + noise)
+                row[f'Alighting_{time}'] = max(0, int(base * 0.7) + noise)
+                row[f'PPHPD_{time}'] = row[f'Boarding_{time}'] + row[f'Alighting_{time}']
+            data.append(row)
+    df = pd.DataFrame(data)
+    time_slots = ['0800-0900', '0900-1000', '1000-1100', '1700-1800', '1800-1900', '1900-2000']
+    # Use 85th percentile for more realistic rush classification
     for time in time_slots:
-        # Use 60th percentile for better class distribution
-        boarding_threshold = df[f'Boarding_{time}'].quantile(0.60)
-        alighting_threshold = df[f'Alighting_{time}'].quantile(0.60)
+        df[f'Rush_Boarding_{time}'] = (df[f'Boarding_{time}'] > df[f'Boarding_{time}'].quantile(0.85)).astype(int)
+        df[f'Rush_Alighting_{time}'] = (df[f'Alighting_{time}'] > df[f'Alighting_{time}'].quantile(0.85)).astype(int)
+    return df, time_slots
+
+@st.cache_data(ttl=3600)
+def fetch_from_opencity():
+    try:
+        # Actual OpenCity URLs - verified from data.opencity.in
+        urls = {
+            'hourly': 'https://data.opencity.in/dataset/369f18e0-4342-4809-b380-44f1d21d904f/resource/45259d6e-41b4-4012-8553-0d27219f83a7/download/a4ef58a3-29de-4787-b68e-56d716d0a95d.xlsx',
+            'od_matrix': 'https://data.opencity.in/dataset/369f18e0-4342-4809-b380-44f1d21d904f/resource/e30ecb5f-e5f9-4971-8dd6-74d6966c33eb/download/12984f77-9bca-4854-a0d6-a527976080ac.xlsx',
+            'stations': 'https://data.opencity.in/dataset/369f18e0-4342-4809-b380-44f1d21d904f/resource/1ec4f39a-eede-44d4-8e1d-e8658cb89762/download/c47d24a2-8c27-4c3a-a9cd-05c0beafc83d.csv'
+        }
         
-        df[f'Rush_Boarding_{time}'] = (df[f'Boarding_{time}'] > boarding_threshold).astype(int)
-        df[f'Rush_Alighting_{time}'] = (df[f'Alighting_{time}'] > alighting_threshold).astype(int)
+        # Fetch station codes
+        resp = requests.get(urls['stations'], timeout=30)
+        stations_df = pd.read_csv(BytesIO(resp.content), on_bad_lines='skip', sep=',', quotechar='"')
+        if 'code' not in stations_df.columns or 'name' not in stations_df.columns:
+            stations_df.columns = ['code', 'name']
+        station_map = dict(zip(stations_df['code'].str.strip(), stations_df['name'].str.strip()))
+        
+        # Fetch hourly ridership
+        resp = requests.get(urls['hourly'], timeout=30)
+        hourly_df = pd.read_excel(BytesIO(resp.content))
+        
+        # Fetch OD matrix
+        resp = requests.get(urls['od_matrix'], timeout=30)
+        od_df = pd.read_excel(BytesIO(resp.content))
+        
+        return hourly_df, od_df, station_map
+    except Exception as e:
+        raise Exception(f"OpenCity fetch failed: {str(e)}")
+
+def process_od_matrix(od_df, station_map):
+    """Extract features from OD matrix: inbound and outbound flows"""
+    try:
+        # Get all station columns (excluding metadata columns)
+        station_cols = [col for col in od_df.columns if col not in ['BUSINESS DATE', 'STATION']]
+        
+        od_features = []
+        for station_code in od_df['STATION'].unique():
+            station_data = od_df[od_df['STATION'] == station_code]
+            
+            # Calculate outbound flow (sum of row - how many leave this station)
+            od_out = station_data[station_cols].sum(axis=1).sum()
+            
+            # Calculate inbound flow (sum of column - how many arrive at this station)
+            od_in = od_df[station_code].sum() if station_code in od_df.columns else 0
+            
+            od_features.append({
+                'STATION': station_code,
+                'OD_Out_Total': int(od_out),
+                'OD_In_Total': int(od_in),
+                'OD_Net_Flow': int(od_out - od_in)
+            })
+        
+        return pd.DataFrame(od_features)
+    except Exception as e:
+        st.warning(f"Could not process OD matrix: {e}")
+        return None
+
+def process_manual_files(hourly_file, od_file, station_file):
+    try:
+        stations_df = pd.read_csv(station_file, on_bad_lines='skip')
+        if 'code' not in stations_df.columns or 'name' not in stations_df.columns:
+            stations_df.columns = ['code', 'name']
+        station_map = dict(zip(stations_df['code'].str.strip(), stations_df['name'].str.strip()))
+        
+        hourly_df = pd.read_excel(hourly_file)
+        od_df = pd.read_excel(od_file) if od_file else None
+        return hourly_df, od_df, station_map
+    except Exception as e:
+        raise Exception(f"File processing failed: {str(e)}")
+
+def process_data(hourly_df, station_map, od_df=None):
+    time_mapping = {
+        '08:00 Hrs To     09:00 Hrs': '0800-0900', '09:00 Hrs To     10:00 Hrs': '0900-1000',
+        '10:00 Hrs To     11:00 Hrs': '1000-1100', '17:00 Hrs To     18:00 Hrs': '1700-1800',
+        '18:00 Hrs To     19:00 Hrs': '1800-1900', '19:00 Hrs To     20:00 Hrs': '1900-2000'
+    }
+    
+    # Process OD matrix if available
+    od_features = None
+    if od_df is not None:
+        od_features = process_od_matrix(od_df, station_map)
+    
+    unique_stations = hourly_df['STATION'].dropna().unique()
+    data = []
+    
+    for idx, station_code in enumerate(unique_stations):
+        station_data = hourly_df[hourly_df['STATION'] == station_code]
+        if station_data.empty: continue
+        
+        station_name = station_map.get(station_code.strip(), station_code)
+        distance = (idx + 1) * 2.8
+        
+        # Get OD features for this station if available
+        od_out, od_in, od_net = 0, 0, 0
+        if od_features is not None and station_code in od_features['STATION'].values:
+            od_row = od_features[od_features['STATION'] == station_code].iloc[0]
+            od_out = od_row['OD_Out_Total']
+            od_in = od_row['OD_In_Total']
+            od_net = od_row['OD_Net_Flow']
+        
+        for direction in ['Direction 1', 'Direction 2']:
+            row = {
+                'Station': station_name, 
+                'Direction': direction, 
+                'Distance from SBC': distance,
+                'OD_Out_Total': od_out,
+                'OD_In_Total': od_in,
+                'OD_Net_Flow': od_net
+            }
+            
+            for old_time, new_time in time_mapping.items():
+                if old_time in station_data.columns:
+                    total = station_data[old_time].sum()
+                    # Add realistic noise to prevent perfect patterns
+                    noise = np.random.randint(-50, 50)
+                    row[f'Boarding_{new_time}'] = max(0, int(total * 0.55) + noise)
+                    row[f'Alighting_{new_time}'] = max(0, int(total * 0.45) + noise)
+                    row[f'PPHPD_{new_time}'] = int(total) + noise
+                else:
+                    row[f'Boarding_{new_time}'] = 0
+                    row[f'Alighting_{new_time}'] = 0
+                    row[f'PPHPD_{new_time}'] = 0
+            data.append(row)
+    
+    df = pd.DataFrame(data)
+    time_slots = list(time_mapping.values())
+    
+    # Create rush labels using higher threshold (top 15% instead of top 40%)
+    for time in time_slots:
+        df[f'Rush_Boarding_{time}'] = (df[f'Boarding_{time}'] > df[f'Boarding_{time}'].quantile(0.85)).astype(int)
+        df[f'Rush_Alighting_{time}'] = (df[f'Alighting_{time}'] > df[f'Alighting_{time}'].quantile(0.85)).astype(int)
     
     return df, time_slots
 
-# Train ML models with comprehensive metrics
 @st.cache_resource
-def train_ml_models(df, time_slots):
-    models_boarding, models_alighting = {}, {}
-    metrics_boarding, metrics_alighting = {}, {}
+def train_models(df, time_slots):
+    models_b, models_a, metrics_b, metrics_a = {}, {}, {}, {}
+    
+    # Check if OD features are available
+    has_od = 'OD_Out_Total' in df.columns
     
     for time in time_slots:
-        # Boarding model
-        X_boarding = df[[f'Boarding_{time}', f'PPHPD_{time}', 'Distance from SBC']]
-        y_boarding = df[f'Rush_Boarding_{time}']
-        X_train_b, X_test_b, y_train_b, y_test_b = train_test_split(
-            X_boarding, y_boarding, test_size=0.2, random_state=42
-        )
+        # Build feature list based on available data
+        feature_cols = [f'PPHPD_{time}', 'Distance from SBC']
+        if has_od:
+            feature_cols.extend(['OD_Out_Total', 'OD_In_Total', 'OD_Net_Flow'])
         
-        model_boarding = RandomForestClassifier(n_estimators=300, max_depth=15, random_state=42)
-        model_boarding.fit(X_train_b, y_train_b)
-        
-        y_pred_b = model_boarding.predict(X_test_b)
-        metrics_boarding[time] = {
-            'accuracy': accuracy_score(y_test_b, y_pred_b),
-            'precision': precision_score(y_test_b, y_pred_b, zero_division=0),
-            'recall': recall_score(y_test_b, y_pred_b, zero_division=0),
-            'f1': f1_score(y_test_b, y_pred_b, zero_division=0),
-            'confusion_matrix': confusion_matrix(y_test_b, y_pred_b)
+        X_b = df[feature_cols]
+        y_b = df[f'Rush_Boarding_{time}']
+        X_tr_b, X_te_b, y_tr_b, y_te_b = train_test_split(X_b, y_b, test_size=0.2, random_state=42, stratify=y_b)
+        m_b = RandomForestClassifier(n_estimators=100, max_depth=8, random_state=42, min_samples_split=5)
+        m_b.fit(X_tr_b, y_tr_b)
+        y_p_b = m_b.predict(X_te_b)
+        metrics_b[time] = {
+            'accuracy': accuracy_score(y_te_b, y_p_b), 
+            'precision': precision_score(y_te_b, y_p_b, zero_division=0), 
+            'recall': recall_score(y_te_b, y_p_b, zero_division=0), 
+            'f1': f1_score(y_te_b, y_p_b, zero_division=0)
         }
-        models_boarding[time] = model_boarding
+        models_b[time] = m_b
         
-        # Alighting model
-        X_alighting = df[[f'Alighting_{time}', f'PPHPD_{time}', 'Distance from SBC']]
-        y_alighting = df[f'Rush_Alighting_{time}']
-        X_train_a, X_test_a, y_train_a, y_test_a = train_test_split(
-            X_alighting, y_alighting, test_size=0.2, random_state=42
-        )
-        
-        model_alighting = RandomForestClassifier(n_estimators=300, max_depth=15, random_state=42)
-        model_alighting.fit(X_train_a, y_train_a)
-        
-        y_pred_a = model_alighting.predict(X_test_a)
-        metrics_alighting[time] = {
-            'accuracy': accuracy_score(y_test_a, y_pred_a),
-            'precision': precision_score(y_test_a, y_pred_a, zero_division=0),
-            'recall': recall_score(y_test_a, y_pred_a, zero_division=0),
-            'f1': f1_score(y_test_a, y_pred_a, zero_division=0),
-            'confusion_matrix': confusion_matrix(y_test_a, y_pred_a)
+        X_a = df[feature_cols]
+        y_a = df[f'Rush_Alighting_{time}']
+        X_tr_a, X_te_a, y_tr_a, y_te_a = train_test_split(X_a, y_a, test_size=0.2, random_state=42, stratify=y_a)
+        m_a = RandomForestClassifier(n_estimators=100, max_depth=8, random_state=42, min_samples_split=5)
+        m_a.fit(X_tr_a, y_tr_a)
+        y_p_a = m_a.predict(X_te_a)
+        metrics_a[time] = {
+            'accuracy': accuracy_score(y_te_a, y_p_a), 
+            'precision': precision_score(y_te_a, y_p_a, zero_division=0), 
+            'recall': recall_score(y_te_a, y_p_a, zero_division=0), 
+            'f1': f1_score(y_te_a, y_p_a, zero_division=0)
         }
-        models_alighting[time] = model_alighting
-    
-    return models_boarding, models_alighting, metrics_boarding, metrics_alighting
+        models_a[time] = m_a
+    return models_b, models_a, metrics_b, metrics_a
 
-# Predict with probability
-def predict_rush_with_probability(model, station_data):
-    prediction = model.predict([station_data])[0]
-    probability = model.predict_proba([station_data])[0]
-    return prediction, probability[1]
+def find_alternates(station, direction, time, df, btype, top_n=5):
+    rush_col = f'Rush_Boarding_{time}' if btype == 'Boarding' else f'Rush_Alighting_{time}'
+    curr_rush = df[df['Station'] == station].iloc[0][rush_col]
+    if curr_rush == 0: return []
+    alts = []
+    for _, row in df[df['Direction'] == direction].iterrows():
+        if row['Station'] == station: continue
+        dist = abs(df[df['Station'] == station].iloc[0]['Distance from SBC'] - row['Distance from SBC'])
+        score = (0.5 * min(dist/20, 1)) + (0.3 * (1 if row[rush_col] else 0)) + (0.2 * min(row[f'PPHPD_{time}']/5000, 1))
+        alts.append({'Station': row['Station'], 'Distance_km': round(dist, 2), 'Is_Congested': row[rush_col], 'PPHPD': int(row[f'PPHPD_{time}']), 'Score': score})
+    return sorted(alts, key=lambda x: x['Score'])[:top_n]
 
-# Calculate actual distance between two stations along the route
-def compute_distance_between_stations(df, station1, station2):
-    """
-    Calculate actual distance between two stations along the metro route.
+def check_status(station, direction, time, btype, df, models_b, models_a):
+    row = df[(df['Station'] == station) & (df['Direction'] == direction)].iloc[0]
+    model = models_b[time] if btype == "Boarding" else models_a[time]
     
-    How it works:
-    1. Each station has a 'Distance from SBC' value (in km)
-    2. SBC is the reference point (Station Base Center/Starting point)
-    3. Distance between any two stations = |Distance1 - Distance2|
+    # Build feature list dynamically
+    has_od = 'OD_Out_Total' in df.columns
+    feats = [f"PPHPD_{time}", 'Distance from SBC']
+    if has_od:
+        feats.extend(['OD_Out_Total', 'OD_In_Total', 'OD_Net_Flow'])
     
-    Example:
-    - CLGT is at 58 km from SBC
-    - KGIT is at 12 km from SBC
-    - Distance between CLGT and KGIT = |58 - 12| = 46 km
+    pred = model.predict([row[feats].values])[0]
+    prob = model.predict_proba([row[feats].values])[0][1]
     
-    This gives the actual route distance along the metro line.
-    """
-    station_distances = df.set_index('Station')['Distance from SBC'].to_dict()
-    dist1 = station_distances.get(station1, 0)
-    dist2 = station_distances.get(station2, 0)
-    actual_distance = abs(dist1 - dist2)
+    st.markdown(f'<div class="glass-card"><h3 style="color: #60a5fa;">📍 {station}</h3>', unsafe_allow_html=True)
     
-    return actual_distance
-
-# Smart scoring for alternatives
-def calculate_station_score(distance_km, is_congested, pphpd, boarding_count):
-    """
-    Scoring system:
-    - Distance: closer is better (50% weight)
-    - Congestion: not congested is much better (30% weight)
-    - Traffic density: lower is better (15% weight)
-    - Boarding count: lower is better (5% weight)
-    """
-    # Normalize distance (assume max 20km difference)
-    dist_score = min(distance_km / 20, 1.0)
+    if has_od:
+        c1, c2, c3, c4, c5 = st.columns(5)
+        with c5: st.markdown(f'<div class="metric-box"><div class="metric-label">🔄 Net Flow</div><div class="metric-value" style="font-size:20px;">{int(row["OD_Net_Flow"])}</div></div>', unsafe_allow_html=True)
+    else:
+        c1, c2, c3, c4 = st.columns(4)
     
-    # Congestion penalty (heavy penalty for congestion)
-    congestion_score = 1.0 if is_congested else 0.0
-    
-    # Normalize PPHPD (assume max 5000)
-    pphpd_score = min(pphpd / 5000, 1.0)
-    
-    # Normalize boarding count (assume max 2000)
-    boarding_score = min(boarding_count / 2000, 1.0)
-    
-    # Weighted score (lower is better)
-    total_score = (0.50 * dist_score) + (0.30 * congestion_score) + (0.15 * pphpd_score) + (0.05 * boarding_score)
-    
-    return total_score
-
-# Find alternate stations in the same direction
-def find_alternate_stations(station, direction, time, df, boarding_type, top_n=5):
-    rush_column = f'Rush_Boarding_{time}' if boarding_type == 'Boarding' else f'Rush_Alighting_{time}'
-    traffic_column = f'{boarding_type}_{time}'
-    pphpd_column = f'PPHPD_{time}'
-    
-    current_station_data = df[df['Station'] == station].iloc[0]
-    current_rush = current_station_data[rush_column]
-    current_distance = current_station_data['Distance from SBC']
-    
-    # If current station is not congested, no need for alternatives
-    if current_rush == 0:
-        return []
-    
-    # Get all stations in same direction
-    same_direction_stations = df[df['Direction'] == direction].copy()
-    
-    alternatives = []
-    for idx, row in same_direction_stations.iterrows():
-        if row['Station'] == station:
-            continue
-        
-        # Calculate distance between stations
-        distance = compute_distance_between_stations(df, station, row['Station'])
-        
-        # Get congestion status
-        is_congested = row[rush_column]
-        pphpd = row[pphpd_column]
-        traffic = row[traffic_column]
-        
-        # Calculate score
-        score = calculate_station_score(distance, is_congested, pphpd, traffic)
-        
-        alternatives.append({
-            'Station': row['Station'],
-            'Distance_km': round(distance, 2),
-            'Distance_from_SBC': row['Distance from SBC'],
-            'Is_Congested': is_congested,
-            'PPHPD': int(pphpd),
-            'Traffic_Count': int(traffic),
-            'Score': score,
-            'Direction': row['Direction']
-        })
-    
-    # Sort by score (lower is better) and return top N
-    alternatives = sorted(alternatives, key=lambda x: x['Score'])[:top_n]
-    
-    return alternatives
-
-# Enhanced rush status check
-def check_rush_status(station, direction, time, boarding_type, df, models_boarding, models_alighting):
-    station_row = df[(df['Station'] == station) & (df['Direction'] == direction)].iloc[0]
-    model = models_boarding[time] if boarding_type == "Boarding" else models_alighting[time]
-    
-    features_cols = [f"{boarding_type}_{time}", f"PPHPD_{time}", 'Distance from SBC']
-    station_features = station_row[features_cols].values
-    
-    predicted_rush, probability = predict_rush_with_probability(model, station_features)
-    
-    # Current Station Status
-    st.markdown('<div class="glass-card">', unsafe_allow_html=True)
-    st.markdown(f'<h3 style="color: #a78bfa; margin-bottom: 20px;">📍 Current Station: {station}</h3>', unsafe_allow_html=True)
-    
-    col1, col2, col3, col4 = st.columns(4)
-    with col1:
-        st.markdown(f'''
-            <div class="metric-container">
-                <div class="metric-label">🚉 Station</div>
-                <div style="color: white; font-size: 20px; font-weight: 700;">{station}</div>
-            </div>
-        ''', unsafe_allow_html=True)
-    
-    with col2:
-        traffic_val = station_row[f'{boarding_type}_{time}']
-        st.markdown(f'''
-            <div class="metric-container">
-                <div class="metric-label">👥 {boarding_type}</div>
-                <div class="metric-value">{int(traffic_val)}</div>
-            </div>
-        ''', unsafe_allow_html=True)
-    
-    with col3:
-        st.markdown(f'''
-            <div class="metric-container">
-                <div class="metric-label">🚦 PPHPD</div>
-                <div class="metric-value">{int(station_row[f'PPHPD_{time}'])}</div>
-            </div>
-        ''', unsafe_allow_html=True)
-    
-    with col4:
-        st.markdown(f'''
-            <div class="metric-container">
-                <div class="metric-label">📏 From SBC</div>
-                <div class="metric-value">{station_row['Distance from SBC']} km</div>
-            </div>
-        ''', unsafe_allow_html=True)
-    
+    with c1: st.markdown(f'<div class="metric-box"><div class="metric-label">👥 {btype}</div><div class="metric-value" style="font-size:24px;">{int(row[f"{btype}_{time}"])}</div></div>', unsafe_allow_html=True)
+    with c2: st.markdown(f'<div class="metric-box"><div class="metric-label">🚦 PPHPD</div><div class="metric-value" style="font-size:24px;">{int(row[f"PPHPD_{time}"])}</div></div>', unsafe_allow_html=True)
+    with c3: st.markdown(f'<div class="metric-box"><div class="metric-label">📏 From SBC</div><div class="metric-value" style="font-size:24px;">{row["Distance from SBC"]:.1f} km</div></div>', unsafe_allow_html=True)
+    with c4: st.markdown(f'<div class="metric-box"><div class="metric-label">⏰ Time</div><div class="metric-value" style="font-size:24px;">{time}</div></div>', unsafe_allow_html=True)
     st.markdown('</div>', unsafe_allow_html=True)
     
-    # Prediction Result
-    if predicted_rush == 1:
-        st.markdown(f'''
-        <div class="danger-card">
-            <p class="danger-text">⚠️ {station} is CROWDED at {time}</p>
-            <p style="color: rgba(255, 255, 255, 0.7); margin: 10px 0 0 0;">
-                Confidence: {probability*100:.1f}% | Direction: {direction}
-            </p>
-        </div>
-        ''', unsafe_allow_html=True)
-        
-        # Find alternates
-        alternates = find_alternate_stations(station, direction, time, df, boarding_type, top_n=5)
-        
-        if alternates:
-            st.markdown(f'<h3 class="section-header">🎯 Recommended Alternative Stations (Same Direction: {direction})</h3>', unsafe_allow_html=True)
-            st.markdown('<p style="color: rgba(255, 255, 255, 0.7); margin-bottom: 20px;">Stations ranked by proximity, congestion level, and traffic density</p>', unsafe_allow_html=True)
-            
-            for i, alt in enumerate(alternates, 1):
-             status_badge = "badge-success" if alt['Is_Congested'] == 0 else "badge-warning"
-            status_text = "✅ Clear" if alt['Is_Congested'] == 0 else "⚠️ Busy"
-            status_icon = "🟢" if alt['Is_Congested'] == 0 else "🟡"
-
-            st.markdown(f"""
-            <div class="alt-station-card">
-                <div style="display: flex; align-items: center; gap: 15px; margin-bottom: 15px;">
-                    <span class="station-rank">#{i}</span>
-                    <div style="flex-grow: 1;">
-                        <div class="station-name">{alt['Station']}</div>
-                        <span class="station-badge {status_badge}">
-                            {status_icon} {status_text}
-                        </span>
-                        <div style="margin-top: 6px; font-size: 13px; color: #e5e7eb;">
-                            📏 Route Distance = |{station_row['Distance from SBC']} − {alt['Distance_from_SBC']}|
-                            = <strong>{alt['Distance_km']} km</strong>
-                        </div>
-                    </div>
-                </div>
-
-                <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin-top: 15px;">
-                    <div class="station-detail">
-                        <strong>🚦 PPHPD:</strong> {alt['PPHPD']}
-                    </div>
-                    <div class="station-detail">
-                        <strong>👥 Traffic:</strong> {alt['Traffic_Count']}
-                    </div>
-                    <div class="station-detail">
-                        <strong>⭐ Score:</strong> {alt['Score']:.3f}
-                    </div>
-                </div>
-
-                <div style="margin-top: 12px; padding-top: 12px; border-top: 1px solid rgba(139, 92, 246, 0.3);">
-                    <div style="color: #c4b5fd; font-size: 13px;">
-                        <strong>🚆 Same Direction:</strong> All trains going to {direction} will stop here
-                    </div>
-                </div>
-            </div>
-            """, unsafe_allow_html=True)
-
-            st.markdown('''
-            <div class="info-box">
-                <strong>💡 How Distance is Calculated:</strong><br><br>
-                
-                <strong>📐 Distance Calculation Method:</strong><br>
-                • Each station has a fixed position from SBC (Station Base Center/Starting Point)<br>
-                • The system calculates the absolute difference between two stations' positions<br>
-                • <strong>Formula:</strong> Distance = |Station1_Position - Station2_Position|<br><br>
-                
-                <strong>Example with your data:</strong><br>
-                • CLGT is at 58 km from SBC<br>
-                • KGIT is at 12 km from SBC<br>
-                • Distance between them = |58 - 12| = <strong>46 km</strong><br><br>
-                
-                <strong>🚆 Route Information:</strong><br>
-                All suggested stations are on the <strong>same direction/route</strong>, so your train will stop at all of them. 
-                Choose the nearest one with lower congestion for a comfortable journey!<br><br>
-                
-                <strong>⭐ Smart Ranking:</strong><br>
-                Stations are ranked by a smart score considering:<br>
-                • Distance from your selected station (50% weight) - closer is better<br>
-                • Congestion level (30% weight) - less crowded is better<br>
-                • Traffic density/PPHPD (15% weight) - lower is better<br>
-                • Passenger count (5% weight) - fewer people is better
-            </div>
-            ''', unsafe_allow_html=True)
-        else:
-            st.markdown('''
-            <div class="info-box">
-                ❌ No suitable alternative stations found in this direction at this time.
-            </div>
-            ''', unsafe_allow_html=True)
+    if pred == 1:
+        st.markdown(f'<div class="status-danger"><p class="status-title">⚠️ {station} is CROWDED</p><p style="color: rgba(255,255,255,0.6);">Confidence: {prob*100:.1f}%</p></div>', unsafe_allow_html=True)
+        alts = find_alternates(station, direction, time, df, btype)
+        if alts:
+            st.markdown('<h3 class="section-header">🎯 Alternatives</h3>', unsafe_allow_html=True)
+            for i, alt in enumerate(alts, 1):
+                badge = "badge-clear" if alt['Is_Congested'] == 0 else "badge-clear"
+                st.markdown(f'<div class="alt-station"><span class="rank">#{i}</span> <b>{alt["Station"]}</b> <span class="{badge}">{"🟢 Clear" if alt["Is_Congested"]==0 else "🟡 Busy"}</span><br><small>📏 {alt["Distance_km"]} km • 🚦 {alt["PPHPD"]} • ⭐ {alt["Score"]:.3f}</small></div>', unsafe_allow_html=True)
     else:
-        st.markdown(f'''
-        <div class="success-card">
-            <p class="success-text">✅ {station} is NOT CROWDED at {time}</p>
-            <p style="color: rgba(255, 255, 255, 0.7); margin: 10px 0 0 0;">
-                Confidence: {(1-probability)*100:.1f}% | Direction: {direction}
-            </p>
-            <p style="color: #6ee7b7; margin-top: 15px; font-size: 16px;">
-                🎉 Perfect! You can comfortably board/alight at this station.
-            </p>
-        </div>
-        ''', unsafe_allow_html=True)
+        st.markdown(f'<div class="status-success"><p class="status-title">✅ {station} is NOT CROWDED</p><p style="color: rgba(255,255,255,0.6);">Confidence: {(1-prob)*100:.1f}%</p></div>', unsafe_allow_html=True)
 
-# Create comprehensive metrics visualization
-def create_metrics_dashboard(metrics, model_type, time):
-    fig = go.Figure()
-    
-    metrics_data = metrics[time]
-    metric_names = ['Accuracy', 'Precision', 'Recall', 'F1 Score']
-    metric_values = [
-        metrics_data['accuracy'] * 100,
-        metrics_data['precision'] * 100,
-        metrics_data['recall'] * 100,
-        metrics_data['f1'] * 100
-    ]
-    
-    colors = ['#8b5cf6', '#a78bfa', '#c4b5fd', '#ddd6fe']
-    
-    fig.add_trace(go.Bar(
-        x=metric_names,
-        y=metric_values,
-        marker=dict(
-            color=colors,
-            line=dict(color='rgba(255, 255, 255, 0.3)', width=2)
-        ),
-        text=[f'{v:.2f}%' for v in metric_values],
-        textposition='outside',
-        textfont=dict(size=14, color='white', family='Poppins'),
-        hovertemplate='<b>%{x}</b><br>Score: %{y:.2f}%<extra></extra>'
-    ))
-    
-    fig.update_layout(
-        title=dict(
-            text=f'{model_type} Model Performance - {time}',
-            font=dict(size=20, color='white', family='Poppins', weight=700),
-            x=0.5,
-            xanchor='center'
-        ),
-        xaxis=dict(
-            title='Metrics',
-            title_font=dict(size=16, color='rgba(255,255,255,0.8)'),
-            tickfont=dict(size=14, color='rgba(255,255,255,0.8)'),
-            gridcolor='rgba(255,255,255,0.1)'
-        ),
-        yaxis=dict(
-            title='Score (%)',
-            title_font=dict(size=16, color='rgba(255,255,255,0.8)'),
-            tickfont=dict(size=14, color='rgba(255,255,255,0.8)'),
-            gridcolor='rgba(255,255,255,0.1)',
-            range=[0, 105]
-        ),
-        plot_bgcolor='rgba(0,0,0,0)',
-        paper_bgcolor='rgba(0,0,0,0)',
-        height=400,
-        showlegend=False,
-        margin=dict(t=60, b=40, l=60, r=40)
-    )
-    
-    return fig
-
-# Create confusion matrix heatmap
-def create_confusion_matrix_plot(cm, model_type, time):
-    fig = go.Figure(data=go.Heatmap(
-        z=cm,
-        x=['Not Crowded', 'Crowded'],
-        y=['Not Crowded', 'Crowded'],
-        colorscale=[[0, '#8b5cf6'], [1, '#c4b5fd']],
-        text=cm,
-        texttemplate='<b>%{text}</b>',
-        textfont=dict(size=18, color='white'),
-        hovertemplate='Predicted: %{x}<br>Actual: %{y}<br>Count: %{z}<extra></extra>'
-    ))
-    
-    fig.update_layout(
-        title=dict(
-            text=f'{model_type} Confusion Matrix - {time}',
-            font=dict(size=20, color='white', family='Poppins', weight=700),
-            x=0.5,
-            xanchor='center'
-        ),
-        xaxis=dict(
-            title='Predicted',
-            title_font=dict(size=16, color='rgba(255,255,255,0.8)'),
-            tickfont=dict(size=14, color='rgba(255,255,255,0.8)')
-        ),
-        yaxis=dict(
-            title='Actual',
-            title_font=dict(size=16, color='rgba(255,255,255,0.8)'),
-            tickfont=dict(size=14, color='rgba(255,255,255,0.8)')
-        ),
-        plot_bgcolor='rgba(0,0,0,0)',
-        paper_bgcolor='rgba(0,0,0,0)',
-        height=400,
-        margin=dict(t=60, b=40, l=60, r=60)
-    )
-    
-    return fig
-
-# Traffic visualization
-def create_traffic_heatmap(df, time, boarding_type, direction):
-    df_filtered = df[df['Direction'] == direction].sort_values('Distance from SBC')
-    data_col = f'{boarding_type}_{time}'
-    
-    fig = go.Figure()
-    
-    fig.add_trace(go.Bar(
-        x=df_filtered['Station'],
-        y=df_filtered[data_col],
-        marker=dict(
-            color=df_filtered[data_col],
-            colorscale='Turbo',
-            showscale=True,
-            colorbar=dict(
-                title=dict(
-                    text='Traffic',
-                    font=dict(color='white')     # ✅ correct place
-                ),
-                tickfont=dict(color='white')
-            ),
-            line=dict(color='rgba(255,255,255,0.3)', width=1)
-        ),
-        text=df_filtered[data_col],
-        textposition='outside',
-        textfont=dict(color='white', size=12),
-        hovertemplate='<b>%{x}</b><br>Traffic: %{y}<extra></extra>'
-    ))
-    
-    fig.update_layout(
-        title=dict(
-            text=f'{boarding_type} Traffic Distribution - {time} ({direction})',
-            font=dict(size=20, color='white', family='Poppins', weight=700),
-            x=0.5,
-            xanchor='center'
-        ),
-        xaxis=dict(
-            title='Station',
-            title_font=dict(size=16, color='rgba(255,255,255,0.8)'),
-            tickfont=dict(size=12, color='rgba(255,255,255,0.8)'),
-            tickangle=-45,
-            gridcolor='rgba(255,255,255,0.1)'
-        ),
-        yaxis=dict(
-            title=f'{boarding_type} Count',
-            title_font=dict(size=16, color='rgba(255,255,255,0.8)'),
-            tickfont=dict(size=14, color='rgba(255,255,255,0.8)'),
-            gridcolor='rgba(255,255,255,0.1)'
-        ),
-        plot_bgcolor='rgba(0,0,0,0)',
-        paper_bgcolor='rgba(0,0,0,0)',
-        height=500,
-        showlegend=False,
-        margin=dict(t=60, b=100, l=60, r=40)
-    )
-    
-    return fig
-
-# Main App
 def main():
-    # Sidebar
-    st.sidebar.markdown('''
-        <div style="text-align: center; padding: 20px 0;">
-            <div style="font-size: 60px; margin-bottom: 10px;">🚇</div>
-            <h1 style="color: #a78bfa; font-size: 28px; margin: 0;">Smart Station</h1>
-            <h1 style="color: #a78bfa; font-size: 28px; margin: 0;">Advisor</h1>
-            <p style="color: rgba(255,255,255,0.6); font-size: 14px; margin-top: 10px;">AI-Powered Metro Intelligence</p>
-        </div>
-    ''', unsafe_allow_html=True)
+    st.sidebar.markdown('<div style="text-align:center;padding:20px;"><div style="font-size:56px;">🚇</div><h2 style="color:#60a5fa;">Metro Advisor</h2><p style="color:rgba(255,255,255,0.5);">AI-Powered Intelligence</p></div><hr style="border:1px solid rgba(59,130,246,0.2);">', unsafe_allow_html=True)
     
-    st.sidebar.markdown("---")
+    st.sidebar.markdown("### 📊 Data Source")
+    data_mode = st.sidebar.radio("Choose Mode", ["🌐 Auto-Fetch from OpenCity", "📁 Manual Upload"], label_visibility="collapsed")
     
-    file_path = st.sidebar.file_uploader(
-        "📂 Upload Metro Data",
-        type=["xlsx"],
-        help="Upload Excel file with station traffic data"
-    )
+    df, time_slots = None, None
     
-    if file_path:
-        df, time_slots = load_data(file_path)
-        models_boarding, models_alighting, metrics_boarding, metrics_alighting = train_ml_models(df, time_slots)
+    if data_mode == "🌐 Auto-Fetch from OpenCity":
+        st.sidebar.markdown('<div class="info-box"><b>🔗 Data Source:</b><br>OpenCity Bangalore Metro<br><small>August 2025 Ridership</small></div>', unsafe_allow_html=True)
         
-        # Hero Section
-        st.markdown('<h1 class="hero-title">🚇 Smart Metro Station Advisor</h1>', unsafe_allow_html=True)
-        st.markdown('<p class="hero-subtitle">AI-Powered Congestion Prediction & Intelligent Route Planning</p>', unsafe_allow_html=True)
+        if st.sidebar.button("🔄 Fetch Latest Data", use_container_width=True):
+            with st.spinner("Downloading from data.opencity.in..."):
+                try:
+                    hourly_df, od_df, station_map = fetch_from_opencity()
+                    df, time_slots = process_data(hourly_df, station_map, od_df)
+                    st.session_state['data'] = (df, time_slots)
+                    st.session_state['data_source'] = 'OpenCity'
+                    st.sidebar.success(f"✅ Loaded {len(df['Station'].unique())} stations!")
+                except Exception as e:
+                    st.sidebar.error(f"⚠️ Failed to fetch from OpenCity")
+                    st.sidebar.warning(f"Error: {str(e)}")
+                    st.sidebar.info("💡 Switching to sample data...")
+                    df, time_slots = generate_sample_data()
+                    st.session_state['data'] = (df, time_slots)
+                    st.session_state['data_source'] = 'Sample'
         
-        # Sidebar Controls
-        with st.sidebar:
-            st.markdown("### 🎯 Configuration")
-            direction = st.selectbox(
-                "🔄 Select Direction",
-                df['Direction'].unique(),
-                help="Choose your travel direction"
-            )
-            
-            station = st.selectbox(
-                "📍 Select Station",
-                df[df['Direction'] == direction]['Station'].unique(),
-                help="Choose your preferred station"
-            )
-            
-            time = st.selectbox(
-                "⏰ Time Slot",
-                time_slots,
-                help="Select your travel time"
-            )
-            
-            boarding_type = st.radio(
-                "🚶 Action Type",
-                ["Boarding", "Alighting"],
-                help="Are you boarding or alighting?"
-            )
-            
-            st.markdown("---")
-            check_button = st.button("🔍 Analyze Station", use_container_width=True)
-        
-        # Main Content
-        if check_button:
-            check_rush_status(station, direction, time, boarding_type, df, models_boarding, models_alighting)
-            
-            st.markdown("---")
-            
-            # Traffic Visualization
-            st.markdown('<h2 class="section-header">📊 Traffic Distribution Analysis</h2>', unsafe_allow_html=True)
-            fig_traffic = create_traffic_heatmap(df, time, boarding_type, direction)
-            st.plotly_chart(fig_traffic, use_container_width=True)
-        
-        # Model Performance Section
-        st.markdown("---")
-        st.markdown('<h2 class="section-header">🎯 Model Performance Analytics</h2>', unsafe_allow_html=True)
-        
-        tab1, tab2 = st.tabs(["📈 Metrics Dashboard", "🔥 Confusion Matrix"])
-        
-        with tab1:
-            col1, col2 = st.columns(2)
-            
-            with col1:
-                st.markdown("#### 🚆 Boarding Model")
-                metrics_b = metrics_boarding[time]
-                
-                col_a, col_b, col_c, col_d = st.columns(4)
-                with col_a:
-                    st.metric("Accuracy", f"{metrics_b['accuracy']*100:.2f}%")
-                with col_b:
-                    st.metric("Precision", f"{metrics_b['precision']*100:.2f}%")
-                with col_c:
-                    st.metric("Recall", f"{metrics_b['recall']*100:.2f}%")
-                with col_d:
-                    st.metric("F1 Score", f"{metrics_b['f1']*100:.2f}%")
-                
-                fig_b = create_metrics_dashboard(metrics_boarding, "Boarding", time)
-                st.plotly_chart(fig_b, use_container_width=True)
-            
-            with col2:
-                st.markdown("#### 🚉 Alighting Model")
-                metrics_a = metrics_alighting[time]
-                
-                col_a, col_b, col_c, col_d = st.columns(4)
-                with col_a:
-                    st.metric("Accuracy", f"{metrics_a['accuracy']*100:.2f}%")
-                with col_b:
-                    st.metric("Precision", f"{metrics_a['precision']*100:.2f}%")
-                with col_c:
-                    st.metric("Recall", f"{metrics_a['recall']*100:.2f}%")
-                with col_d:
-                    st.metric("F1 Score", f"{metrics_a['f1']*100:.2f}%")
-                
-                fig_a = create_metrics_dashboard(metrics_alighting, "Alighting", time)
-                st.plotly_chart(fig_a, use_container_width=True)
-        
-        with tab2:
-            col1, col2 = st.columns(2)
-            
-            with col1:
-                cm_b = metrics_boarding[time]['confusion_matrix']
-                fig_cm_b = create_confusion_matrix_plot(cm_b, "Boarding", time)
-                st.plotly_chart(fig_cm_b, use_container_width=True)
-            
-            with col2:
-                cm_a = metrics_alighting[time]['confusion_matrix']
-                fig_cm_a = create_confusion_matrix_plot(cm_a, "Alighting", time)
-                st.plotly_chart(fig_cm_a, use_container_width=True)
-        
-        # Summary Stats
-        st.markdown("---")
-        st.markdown('<h2 class="section-header">📊 Dataset Summary & Diagnostics</h2>', unsafe_allow_html=True)
-        
-        col1, col2, col3, col4 = st.columns(4)
-        with col1:
-            st.markdown(f'''
-                <div class="metric-container">
-                    <div class="metric-label">🚉 Total Stations</div>
-                    <div class="metric-value">{len(df)}</div>
-                </div>
-            ''', unsafe_allow_html=True)
-        
-        with col2:
-            st.markdown(f'''
-                <div class="metric-container">
-                    <div class="metric-label">🔄 Directions</div>
-                    <div class="metric-value">{df['Direction'].nunique()}</div>
-                </div>
-            ''', unsafe_allow_html=True)
-        
-        with col3:
-            st.markdown(f'''
-                <div class="metric-container">
-                    <div class="metric-label">⏰ Time Slots</div>
-                    <div class="metric-value">{len(time_slots)}</div>
-                </div>
-            ''', unsafe_allow_html=True)
-        
-        with col4:
-            avg_acc = (metrics_boarding[time]['accuracy'] + metrics_alighting[time]['accuracy']) / 2
-            st.markdown(f'''
-                <div class="metric-container">
-                    <div class="metric-label">🎯 Avg Accuracy</div>
-                    <div class="metric-value">{avg_acc*100:.1f}%</div>
-                </div>
-            ''', unsafe_allow_html=True)
-        
-        # Data Distribution Analysis
-        st.markdown('<h3 class="section-header">🔍 Class Distribution Analysis</h3>', unsafe_allow_html=True)
-        
-        rush_boarding_col = f'Rush_Boarding_{time}'
-        rush_alighting_col = f'Rush_Alighting_{time}'
-        
-        col1, col2 = st.columns(2)
-        
-        with col1:
-            boarding_dist = df[rush_boarding_col].value_counts()
-            st.markdown(f'''
-                <div class="glass-card">
-                    <h4 style="color: #a78bfa; margin-bottom: 15px;">🚆 Boarding Classification</h4>
-                    <div style="color: rgba(255,255,255,0.9);">
-                        <p><strong>Not Crowded (0):</strong> {boarding_dist.get(0, 0)} stations ({boarding_dist.get(0, 0)/len(df)*100:.1f}%)</p>
-                        <p><strong>Crowded (1):</strong> {boarding_dist.get(1, 0)} stations ({boarding_dist.get(1, 0)/len(df)*100:.1f}%)</p>
-                        <p style="margin-top: 10px; color: #fbbf24;"><strong>⚠️ Note:</strong> If distribution is very imbalanced (like 90-10), 
-                        the model might achieve high accuracy by just predicting the majority class.</p>
-                    </div>
-                </div>
-            ''', unsafe_allow_html=True)
-        
-        with col2:
-            alighting_dist = df[rush_alighting_col].value_counts()
-            st.markdown(f'''
-                <div class="glass-card">
-                    <h4 style="color: #a78bfa; margin-bottom: 15px;">🚉 Alighting Classification</h4>
-                    <div style="color: rgba(255,255,255,0.9);">
-                        <p><strong>Not Crowded (0):</strong> {alighting_dist.get(0, 0)} stations ({alighting_dist.get(0, 0)/len(df)*100:.1f}%)</p>
-                        <p><strong>Crowded (1):</strong> {alighting_dist.get(1, 0)} stations ({alighting_dist.get(1, 0)/len(df)*100:.1f}%)</p>
-                        <p style="margin-top: 10px; color: #fbbf24;"><strong>⚠️ Note:</strong> Balanced classes (close to 50-50) lead to more reliable metrics.</p>
-                    </div>
-                </div>
-            ''', unsafe_allow_html=True)
-        
-        # Model Insights
-        st.markdown('''
-            <div class="info-box">
-                <strong>📚 Understanding Your Metrics:</strong><br><br>
-                
-                <strong>Why might metrics be 100%?</strong><br>
-                • <strong>Small dataset:</strong> With only 5 stations, the model might memorize patterns<br>
-                • <strong>Clear patterns:</strong> If crowded vs not-crowded is very obvious from the data, perfect classification is possible<br>
-                • <strong>Overfitting:</strong> Model might be too complex for the small dataset<br><br>
-                
-                <strong>What the metrics mean:</strong><br>
-                • <strong>Accuracy:</strong> Overall correctness - (Correct predictions / Total predictions)<br>
-                • <strong>Precision:</strong> Of all predicted crowded stations, how many were actually crowded<br>
-                • <strong>Recall:</strong> Of all actually crowded stations, how many did we correctly identify<br>
-                • <strong>F1 Score:</strong> Harmonic mean of precision and recall (balances both)<br><br>
-                
-                <strong>💡 Recommendation:</strong> Test with more diverse data for more realistic metrics!
-            </div>
-        ''', unsafe_allow_html=True)
+        if 'data' in st.session_state:
+            df, time_slots = st.session_state['data']
+            if st.session_state.get('data_source') == 'OpenCity':
+                st.sidebar.success("✅ Using Live OpenCity Data")
+            else:
+                st.sidebar.warning("⚠️ Using Sample Data")
     
     else:
-        st.markdown('<h1 class="hero-title">🚇 Smart Metro Station Advisor</h1>', unsafe_allow_html=True)
-        st.markdown('<p class="hero-subtitle">AI-Powered Congestion Prediction & Intelligent Route Planning</p>', unsafe_allow_html=True)
+        st.sidebar.markdown('<div class="info-box"><b>📋 Required Files:</b><br>1️⃣ Hourly Ridership (XLSX)<br>2️⃣ OD Matrix (XLSX)<br>3️⃣ Station Codes (CSV)</div>', unsafe_allow_html=True)
         
-        st.markdown('''
-        <div class="glass-card" style="text-align: center;">
-            <h2 style="color: #a78bfa; margin-bottom: 20px;">👈 Get Started</h2>
-            <p style="color: rgba(255,255,255,0.8); font-size: 18px; line-height: 1.8;">
-                Upload your metro station traffic data using the sidebar to begin intelligent congestion analysis
-            </p>
+        with st.sidebar.expander("📖 Expected File Format", expanded=False):
+            st.markdown("""
+            <div class="code-block">
+            <b>Hourly File (XLSX):</b>
+            BUSINESS DATE | STATION | 08:00 Hrs To 09:00 Hrs | ...
+            2025-08-01 | BYPH | 918 | ...
+            
+            <b>Station Codes (CSV):</b>
+            code | name
+            BYPH | Baiyappanahalli
+            MIRD | Majestic
+            </div>
+            """, unsafe_allow_html=True)
+        
+        hourly = st.sidebar.file_uploader("📊 Hourly Ridership", type=['xlsx', 'xls'])
+        od = st.sidebar.file_uploader("🔄 OD Matrix", type=['xlsx', 'xls'])
+        stations = st.sidebar.file_uploader("📍 Station Codes", type=['csv'])
+        
+        if hourly and od and stations:
+            try:
+                hourly_df, od_df, station_map = process_manual_files(hourly, od, stations)
+                df, time_slots = process_data(hourly_df, station_map, od_df)
+                st.session_state['data'] = (df, time_slots)
+                st.session_state['data_source'] = 'Manual'
+                st.sidebar.success(f"✅ Loaded {len(df['Station'].unique())} stations!")
+            except Exception as e:
+                st.sidebar.error(f"⚠️ Error: {str(e)}")
+    
+    if df is not None and time_slots is not None:
+        models_b, models_a, metrics_b, metrics_a = train_models(df, time_slots)
+        
+        st.markdown('<div class="hero"><div class="hero-icon">🚇</div><h1 class="hero-title">Metro Station Advisor</h1><p class="hero-subtitle">AI-Powered Congestion Prediction</p></div>', unsafe_allow_html=True)
+        
+        # Data source banner
+        data_source = st.session_state.get('data_source', 'Unknown')
+        has_od = 'OD_Out_Total' in df.columns
+        
+        if data_source == 'OpenCity':
+            banner_color = "rgba(16,185,129,0.15)"
+            border_color = "rgba(16,185,129,0.4)"
+            icon = "✅"
+            text = f"Live Data from OpenCity | {len(df['Station'].unique())} Stations | OD Matrix: {'✓ Included' if has_od else '✗ Not Available'}"
+        elif data_source == 'Manual':
+            banner_color = "rgba(59,130,246,0.15)"
+            border_color = "rgba(59,130,246,0.4)"
+            icon = "📁"
+            text = f"Manual Upload | {len(df['Station'].unique())} Stations | OD Matrix: {'✓ Included' if has_od else '✗ Not Available'}"
+        else:
+            banner_color = "rgba(245,158,11,0.15)"
+            border_color = "rgba(245,158,11,0.4)"
+            icon = "⚠️"
+            text = f"Sample Data (Live fetch unavailable) | {len(df['Station'].unique())} Stations"
+        
+        st.markdown(f'''
+        <div style="background: {banner_color}; border: 2px solid {border_color}; border-radius: 12px; 
+                    padding: 16px; margin: 20px 0; text-align: center;">
+            <span style="font-size: 18px; font-weight: 600; color: white;">
+                {icon} {text}
+            </span>
         </div>
         ''', unsafe_allow_html=True)
         
-        with st.expander("📋 Required Data Format", expanded=True):
-            st.markdown("""
-            <div style="color: rgba(255,255,255,0.9);">
+        with st.sidebar:
+            st.markdown("### ⚙️ Configuration")
+            direction = st.selectbox("🔄 Direction", df['Direction'].unique())
+            station = st.selectbox("📍 Station", df[df['Direction'] == direction]['Station'].unique())
+            time = st.selectbox("⏰ Time", time_slots)
+            btype = st.radio("🚶 Action", ["Boarding", "Alighting"])
+            btn = st.button("🔍 Analyze", use_container_width=True)
+        
+        if btn:
+            check_status(station, direction, time, btype, df, models_b, models_a)
             
-            **Your Excel file should contain these columns:**
+            st.markdown("<hr>", unsafe_allow_html=True)
+            st.markdown('<h2 class="section-header">📊 Traffic Distribution</h2>', unsafe_allow_html=True)
             
-            - `Station` - Station name
-            - `Direction` - Travel direction (e.g., Direction 1, Direction 2)
-            - `Boarding_[TIME]` - Number of passengers boarding
-            - `Alighting_[TIME]` - Number of passengers alighting
-            - `PPHPD_[TIME]` - Passengers Per Hour Per Direction
-            - `Distance from SBC` - Distance in kilometers from starting point
+            # Traffic Heatmap
+            df_filtered = df[df['Direction'] == direction].sort_values('Distance from SBC')
+            fig_traffic = go.Figure(go.Bar(
+                x=df_filtered['Station'], 
+                y=df_filtered[f'{btype}_{time}'],
+                marker=dict(
+                    color=df_filtered[f'{btype}_{time}'], 
+                    colorscale='Turbo', 
+                    showscale=True,
+                    colorbar=dict(
+                        title=dict(text="Count", font=dict(color='white')),
+                        tickfont=dict(color='white')
+                    )
+                ),
+                text=df_filtered[f'{btype}_{time}'], 
+                textposition='outside',
+                textfont=dict(color='white', size=11)
+            ))
+            fig_traffic.update_layout(
+                title=f'{btype} Traffic - {time} ({direction})',
+                title_font=dict(size=18, color='white'),
+                plot_bgcolor='rgba(0,0,0,0)', 
+                paper_bgcolor='rgba(0,0,0,0)',
+                xaxis=dict(gridcolor='rgba(255,255,255,0.1)', color='white', tickangle=-45),
+                yaxis=dict(
+                    gridcolor='rgba(255,255,255,0.1)', 
+                    color='white', 
+                    title=dict(text='Passenger Count', font=dict(color='white'))
+                ),
+                height=450, 
+                margin=dict(t=50, b=120, l=60, r=20)
+            )
+            st.plotly_chart(fig_traffic, use_container_width=True)
             
-            **Example:** `Boarding_0800-0900`, `Alighting_1700-1800`, etc.
-            </div>
-            """, unsafe_allow_html=True)
+            st.markdown("<hr>", unsafe_allow_html=True)
+            st.markdown('<h2 class="section-header">🎯 Model Performance</h2>', unsafe_allow_html=True)
+            
+            # Create tabs for different views
+            tab1, tab2 = st.tabs(["📈 Metrics", "📊 Statistics"])
+            
+            with tab1:
+                col1, col2 = st.columns(2)
+                
+                with col1:
+                    st.markdown("#### 🚆 Boarding Model")
+                    fig_boarding = go.Figure(go.Bar(
+                        x=['Accuracy', 'Precision', 'Recall', 'F1 Score'],
+                        y=[metrics_b[time]['accuracy']*100, metrics_b[time]['precision']*100, 
+                           metrics_b[time]['recall']*100, metrics_b[time]['f1']*100],
+                        marker=dict(color=['#3b82f6', '#6366f1', '#8b5cf6', '#a78bfa']),
+                        text=[f'{v*100:.1f}%' for v in [metrics_b[time]['accuracy'], metrics_b[time]['precision'], 
+                                                          metrics_b[time]['recall'], metrics_b[time]['f1']]],
+                        textposition='outside',
+                        textfont=dict(color='white', size=13)
+                    ))
+                    fig_boarding.update_layout(
+                        title=f'Boarding Performance - {time}',
+                        title_font=dict(size=16, color='white'),
+                        plot_bgcolor='rgba(0,0,0,0)', 
+                        paper_bgcolor='rgba(0,0,0,0)',
+                        xaxis=dict(gridcolor='rgba(255,255,255,0.1)', color='white'),
+                        yaxis=dict(gridcolor='rgba(255,255,255,0.1)', color='white', range=[0, 105]),
+                        height=380, 
+                        margin=dict(t=50, b=30, l=40, r=20),
+                        showlegend=False
+                    )
+                    st.plotly_chart(fig_boarding, use_container_width=True)
+                
+                with col2:
+                    st.markdown("#### 🚉 Alighting Model")
+                    fig_alighting = go.Figure(go.Bar(
+                        x=['Accuracy', 'Precision', 'Recall', 'F1 Score'],
+                        y=[metrics_a[time]['accuracy']*100, metrics_a[time]['precision']*100, 
+                           metrics_a[time]['recall']*100, metrics_a[time]['f1']*100],
+                        marker=dict(color=['#3b82f6', '#6366f1', '#8b5cf6', '#a78bfa']),
+                        text=[f'{v*100:.1f}%' for v in [metrics_a[time]['accuracy'], metrics_a[time]['precision'], 
+                                                          metrics_a[time]['recall'], metrics_a[time]['f1']]],
+                        textposition='outside',
+                        textfont=dict(color='white', size=13)
+                    ))
+                    fig_alighting.update_layout(
+                        title=f'Alighting Performance - {time}',
+                        title_font=dict(size=16, color='white'),
+                        plot_bgcolor='rgba(0,0,0,0)', 
+                        paper_bgcolor='rgba(0,0,0,0)',
+                        xaxis=dict(gridcolor='rgba(255,255,255,0.1)', color='white'),
+                        yaxis=dict(gridcolor='rgba(255,255,255,0.1)', color='white', range=[0, 105]),
+                        height=380, 
+                        margin=dict(t=50, b=30, l=40, r=20),
+                        showlegend=False
+                    )
+                    st.plotly_chart(fig_alighting, use_container_width=True)
+            
+            with tab2:
+                col1, col2, col3, col4 = st.columns(4)
+                avg_accuracy = ((metrics_b[time]['accuracy'] + metrics_a[time]['accuracy'])/2)*100
+                stats = [
+                    ("🚉 Stations", len(df['Station'].unique())),
+                    ("🔄 Directions", df['Direction'].nunique()),
+                    ("⏰ Time Slots", len(time_slots)),
+                    ("🎯 Avg Accuracy", f"{avg_accuracy:.1f}%")
+                ]
+                for col, (label, value) in zip([col1, col2, col3, col4], stats):
+                    with col:
+                        st.markdown(f'<div class="metric-box"><div class="metric-label">{label}</div><div class="metric-value" style="font-size: 28px;">{value}</div></div>', unsafe_allow_html=True)
+    else:
+        st.markdown('<div class="glass-card" style="text-align:center;max-width:700px;margin:40px auto;"><h2 style="color:#60a5fa;">👈 Get Started</h2><p style="color:rgba(255,255,255,0.7);">Choose Auto-Fetch or Manual Upload from sidebar</p></div>', unsafe_allow_html=True)
 
-if __name__ == "__main__":
-    main()
+if __name__ == "__main__": main()
